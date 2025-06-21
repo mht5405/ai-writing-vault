@@ -51,7 +51,7 @@ let historyAnswer = computed(()=>{
 })
 
 watch(historyAnswer,async ()=>{
-    console.log('监听到historyAnswer改变')
+    // console.log('监听到historyAnswer改变')
     const container = document.querySelector('.answer-field') as HTMLElement
     container.innerHTML = '';
     await MarkdownRenderer.render(
@@ -61,7 +61,7 @@ watch(historyAnswer,async ()=>{
                 '/',
                 props.plugin
         );
-    console.log('watch', historyAnswer.value)
+    // console.log('watch', historyAnswer.value)
 })
 
 
@@ -97,7 +97,7 @@ const submit = async () => {
                 response,
                 container,
                 '/',
-                props.plugin
+                props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
             );
 
             // 保存对话到 store
@@ -106,8 +106,14 @@ const submit = async () => {
             inputContent.value = '';
         }
     } catch (error: any) {
-        console.error('Error:', error);
-        container.innerHTML = `<div class="error-message">错误: ${error.message}</div>`;
+        // console.log('---Error:', error);
+        await MarkdownRenderer.render(
+                props.plugin.app,
+                error.message,
+                container,
+                '/',
+                props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
+            );
     } finally {
         isLoading.value = false;  // 结束加载
     }
