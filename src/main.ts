@@ -1,5 +1,5 @@
 import { Plugin, WorkspaceLeaf, Notice } from "obsidian";
-import { DeepSeekAIAssistant_SettingTab } from "./setting-tab";
+import { MyPluginSettingTab } from "./setting-tab";
 import {SettingsInterfaceType, DEFAULT_SETTINGS} from './settings'  // 导入设置接口类型
 import { MyItemView } from "./my-itemview";
 
@@ -10,7 +10,7 @@ export default class Plugin_Deepseek_AI_Assistant extends Plugin {
 
     async onload() {
         await this.loadSettings();
-        this.addSettingTab(new DeepSeekAIAssistant_SettingTab(this.app, this));
+        this.addSettingTab(new MyPluginSettingTab(this.app, this));
         this.registerView("deepseek-ai-assistant-itemview", (leaf) => new MyItemView(leaf, this));
         this.addRibbonIcon("bot", "AI Assistant", () => {
             this.activateView();

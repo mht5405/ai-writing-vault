@@ -103,22 +103,22 @@ const drawHeatmap = async () => {
 
 // 监听 promptStats 的变化
 watch(() => promptStore.promptStats, async () => {
-    // console.log('promptStats changed, redrawing heatmap')
+    console.log('promptStats changed, redrawing heatmap')
     await drawHeatmap()
 }, { deep: true })
 
 onMounted(async () => {
-    // console.log('mounted')
+    console.log('mounted')
     await drawHeatmap()
 })
 
 const handleClick = (e,v)=>{
-    // console.log('-----------')
-    // console.log(e)
-    // console.log(v)
-    // console.log('点击了日期:', v.date)
+    console.log('-----------')
+    console.log(e)
+    console.log(v)
+    console.log('点击了日期:', v.date)
     promptStore.selectedDate = v.date
-    // console.log('promptStore.selectedDate', promptStore.selectedDate)
+    console.log('promptStore.selectedDate', promptStore.selectedDate)
 }
 
 const generateData = (forwardMonth, options={}) => {

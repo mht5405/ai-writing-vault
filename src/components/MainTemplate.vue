@@ -42,6 +42,9 @@ const startDrag = (e: MouseEvent) => {
   // 全局事件监听
   window.addEventListener('mousemove', handleDrag);
   window.addEventListener('mouseup', stopDrag);
+  
+  // 防止文本选中
+  document.body.style.userSelect = 'none';
 };
 
 // 处理拖拽
@@ -58,7 +61,8 @@ const handleDrag = (e: MouseEvent) => {
 // 停止拖拽
 const stopDrag = () => {
   isDragging.value = false;
-
+  document.body.style.userSelect = '';
+  
   // 清理事件
   window.removeEventListener('mousemove', handleDrag);
   window.removeEventListener('mouseup', stopDrag);

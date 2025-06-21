@@ -45,7 +45,7 @@ export const usePromptStore = defineStore('prompts',()=>{
 
     function updateHistoryCard(answer: any){
         historyCard.value = answer
-        // console.log('item被点击')
+        console.log('item被点击')
     }
     return {promptStats, addPrompt, selectedDate, updateHistoryCard, historyCard}
 })

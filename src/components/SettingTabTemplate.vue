@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div>
         <h2>AI助手 设置:{{ plugin.settings.API_URL }}</h2>
         <span>AI_KEY</span>
@@ -22,4 +22,4 @@ const props = defineProps<{
     margin-left: 1em;
     color: #6C31E3;
 }
-</style> -->
+</style>

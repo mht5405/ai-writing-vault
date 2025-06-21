@@ -32,20 +32,20 @@ const props = defineProps<{
 }>();
 
 const selectedDate = computed(()=>{
-  // console.log(promptStore.selectedDate)
+  console.log(promptStore.selectedDate)
   return promptStore.selectedDate
 })
 
 let selectedPromptStats = computed(()=>{
   const promptStats = promptStore.promptStats
-  // console.log('promptLine:',promptStats[promptStore.selectedDate] )
+  console.log('promptLine:',promptStats[promptStore.selectedDate] )
   return promptStats[promptStore.selectedDate] 
 })
 
 const sortedPromptContent = computed(() => {
 
   if(!selectedPromptStats.value){
-    // console.log('!!')
+    console.log('!!')
     return {}
   }
   // 创建副本避免修改原始数据
@@ -71,7 +71,7 @@ const formatTime = (timestamp: string) => {
     }
     return date.toLocaleTimeString();
   } catch (error) {
-    // console.error('时间格式化错误:', error);
+    console.error('时间格式化错误:', error);
     return '无效时间';
   }
 }

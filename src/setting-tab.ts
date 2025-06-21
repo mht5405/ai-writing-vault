@@ -1,9 +1,9 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
 import Plugin_Deepseek_AI_Assistant from "./main";
-// import SettingTabTemplate from "./components/SettingTabTemplate.vue";
+import SettingTabTemplate from "./components/SettingTabTemplate.vue";
 
-export class DeepSeekAIAssistant_SettingTab extends PluginSettingTab {
+export class MyPluginSettingTab extends PluginSettingTab {
     plugin: Plugin_Deepseek_AI_Assistant;
     constructor(app: App, plugin: Plugin_Deepseek_AI_Assistant) {
         super(app, plugin);
@@ -16,11 +16,13 @@ export class DeepSeekAIAssistant_SettingTab extends PluginSettingTab {
         //     plugin: this.plugin,   // 将 plugin 实例传递给 Vue 组件
         // }).mount(containerEl);
 
+        containerEl.createEl('h2', {text: 'AI Assistant Settings'});
 
         new Setting(containerEl)
-            .setName('API key')
-            .setDesc('Get your API key from https://platform.deepseek.com')
+            .setName('API Key')
+            .setDesc('请输入你的 API Key. API Key的获取地址:https://platform.deepseek.com 本插件目前只集成了DeepSeek模型')
             .addText(text => text
+                .setPlaceholder('sk-...')
                 .setValue(this.plugin.settings.API_KEY)
                 .onChange(async (value) => {
                     this.plugin.settings.API_KEY = value;
@@ -29,7 +31,7 @@ export class DeepSeekAIAssistant_SettingTab extends PluginSettingTab {
         
         new Setting(containerEl)
             .setName('API URL')
-            .setDesc('The default API server address which does not need to be modified')
+            .setDesc('API 服务器地址. 不需要修改')
             .addText(text => text
                 .setPlaceholder('https://api.openai.com/v1')
                 .setValue(this.plugin.settings.API_URL)
