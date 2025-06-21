@@ -8,7 +8,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { createPinia} from 'pinia'
 import { usePluginStore } from "./store/plugin";
 
-export class MyItemView extends ItemView{
+export class DeepSeekAIAssistant_ItemView extends ItemView{
     plugin: Plugin_Deepseek_AI_Assistant;
     constructor(leaf: WorkspaceLeaf, plugin: Plugin_Deepseek_AI_Assistant) {
         super(leaf);
