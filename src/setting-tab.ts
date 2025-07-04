@@ -29,7 +29,7 @@ export class DeepSeekAIAssistant_SettingTab extends PluginSettingTab {
         
         new Setting(containerEl)
             .setName('API URL')
-            .setDesc('The default API server address which does not need to be modified')
+            .setDesc('The default API server address does not require modification.')
             .addText(text => text
                 .setPlaceholder('https://api.openai.com/v1')
                 .setValue(this.plugin.settings.API_URL)

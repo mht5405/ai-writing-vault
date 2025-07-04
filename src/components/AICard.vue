@@ -59,7 +59,7 @@ watch(historyAnswer,async ()=>{
                 historyAnswer.value,
                 container,
                 '/',
-                props.plugin
+                props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
         );
     // console.log('watch', historyAnswer.value)
 })
