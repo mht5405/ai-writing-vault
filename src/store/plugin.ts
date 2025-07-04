@@ -7,7 +7,7 @@ export const usePluginStore = defineStore('plugin', {
   }),
   actions: {
     setPlugin(plugin: MyPlugin) {
-      console.log(plugin)
+      // console.log(plugin)
       this.plugin = plugin;
     },
   },

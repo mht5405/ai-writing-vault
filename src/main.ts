@@ -12,7 +12,7 @@ export default class Plugin_Deepseek_AI_Assistant extends Plugin {
         await this.loadSettings();
         this.addSettingTab(new DeepSeekAIAssistant_SettingTab(this.app, this));
         this.registerView("deepseek-ai-assistant-itemview", (leaf) => new DeepSeekAIAssistant_ItemView(leaf, this));
-        this.addRibbonIcon("bot", "AI Assistant", () => {
+        this.addRibbonIcon("bot", "Open deepseek AI assistant", () => {
             this.activateView();
         });
         

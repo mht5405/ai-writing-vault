@@ -18,7 +18,7 @@ export class DeepSeekAIAssistant_ItemView extends ItemView{
         return "deepseek-ai-assistant-itemview"
     }
     getDisplayText(): string {
-        return "AI Assistant"
+        return "Deepseek AI assistant"
     }
     getIcon():string {
         return "bot"
