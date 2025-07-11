@@ -53,7 +53,7 @@ let historyAnswer = computed(()=>{
 watch(historyAnswer,async ()=>{
     // console.log('监听到historyAnswer改变')
     const container = document.querySelector('.answer-field') as HTMLElement
-    container.innerHTML = '';
+    container.empty();
     await MarkdownRenderer.render(
                 props.plugin.app,
                 historyAnswer.value,
@@ -71,7 +71,7 @@ const handleCommand = (command: string | number | object) => {
 
 const submit = async () => {
     const container = document.querySelector('.answer-field') as HTMLElement;
-    container.innerHTML = '';
+    container.empty();
     isLoading.value = true;  // 开始加载
 
     try {
