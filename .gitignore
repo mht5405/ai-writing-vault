@@ -35,7 +35,7 @@
 ## DO NOT include the compiled main.js file in the repo.
 ## It should be uploaded to GitHub Releases instead.
 ##
-## 不要将编译好的 main.js 文件包含在仓库里.
+## 不要将编译好的 main.js 和 styles.css 文件包含在仓库里.
 ## 它应该提交到 GitHub Releases 当中.
 ##
 /main.js
