@@ -113,7 +113,7 @@ watch(() => promptStats, async () => {
     </div> 
 </template>
 
-<style>
+<style scoped>
 svg{
     width:100%;
     margin:10px;
