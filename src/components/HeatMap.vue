@@ -27,14 +27,15 @@ watch(rect_count_x,(newValue, oldValue)=>{
     draw_svg() // 根据这个rect_count_x，重新绘制svg
 })
 
-onMounted(()=>{
-    // console.log(jsonData)
+onMounted(async ()=>{
+    // console.log('这里是onMounted钩子')
+    await nextTick() // 等待DOM更新完成
     observer.observe(document.getElementById('svg_container'))
     draw_svg();
 })
 
 const draw_svg = async ()=>{
-    await nextTick()
+    await nextTick() // 等待DOM更新完成
     d3.select('#svg_container').selectAll('rect').remove()
     // 日期方块的个数应该是： rect_count_x * 7
     // svg中的日期方块的渲染布局应该是先纵向布局，再横向布局。纵向布局7个日期方块，再横向布局
