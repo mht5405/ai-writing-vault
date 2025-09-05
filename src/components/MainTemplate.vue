@@ -2,7 +2,8 @@
     <el-container>
         <el-aside>
             <HeatMap/>
-            <!-- <ContributionsHeatMap/> -->
+            <!-- <ThinkingClue/>
+            <WordCloud/> -->
             <PromptLine :plugin="plugin"/>
         </el-aside>
         <el-main>
@@ -18,8 +19,9 @@
 
 <script setup lang="ts">
 import AICard from "./AICard.vue";
-// import ContributionsHeatMap from "./ContributionsHeatMap.vue";
 import HeatMap from "./HeatMap.vue";
+// import ThinkingClue from "./ThinkingClue.vue";
+// import WordCloud from "./WordCloud.vue";
 import PromptLine from "./PromptLine.vue";
 import { ref, onUnmounted } from 'vue';
 
