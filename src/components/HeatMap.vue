@@ -101,7 +101,7 @@ const handleClick = (e,v)=>{
 }
 
 // 监听 promptStats 的变化
-watch(() => promptStats, async () => {
+watch(() => promptStore.promptStats, async () => {
     // console.log('promptStats changed, redrawing svg...')
     await draw_svg()
 }, { deep: true })

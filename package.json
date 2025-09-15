@@ -27,6 +27,8 @@
         "d3": "^7.9.0",
         "element-plus": "^2.9.7",
         "openai": "^4.91.1",
-        "pinia": "^3.0.1"
+        "pinia": "^3.0.1",
+        "segmentit": "^2.0.3",
+        "wordcloud": "^1.2.3"
     }
 }
