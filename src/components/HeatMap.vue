@@ -1,6 +1,6 @@
 <script setup>
 import * as d3 from 'd3'
-import { ref, onMounted,nextTick, watchEffect, watch } from 'vue';
+import { ref, onMounted,nextTick, watchEffect, watch, reactive } from 'vue';
 import { usePromptStore } from '../store/prompts'
 
 const promptStore = usePromptStore()
@@ -8,7 +8,7 @@ const pixel_width = ref(12)
 const svg_left_or_right_margin = ref(10)
 const pixel_margin = ref(5) // rect与右边的rect之间的间隔
 var rect_count_x = ref(0)
-const promptStats = promptStore.promptStats
+// const promptStats = promptStore.promptStats // 不要另外再单独赋值！这样用，监听不到响应式变化
 
 const observer = new ResizeObserver(entries =>{
     for(let entry of entries){
@@ -23,7 +23,6 @@ const observer = new ResizeObserver(entries =>{
 // 监听rect_count_x的变化
 watch(rect_count_x,(newValue, oldValue)=>{
     // console.log(`一行里面的rect的个数是${newValue}`)
-    
     draw_svg() // 根据这个rect_count_x，重新绘制svg
 })
 
@@ -51,8 +50,8 @@ const draw_svg = async ()=>{
         const date_str = date.toISOString().split('T')[0] // 只取日期部分
         // 查找 promptStats 中是否有这个日期的键
         let prompts_num = 0
-        if(promptStats[date_str]){
-            prompts_num = promptStats[date_str].num
+        if(promptStore.promptStats[date_str]){
+            prompts_num = promptStore.promptStats[date_str].num
         } 
         date_list.unshift({"date": date_str, "prompts_num": prompts_num || 0}) // 新日期插入到数组前面
     }
@@ -102,8 +101,9 @@ const handleClick = (e,v)=>{
 
 // 监听 promptStats 的变化
 watch(() => promptStore.promptStats, async () => {
+    await nextTick() // 等待DOM更新完成
     // console.log('promptStats changed, redrawing svg...')
-    await draw_svg()
+    draw_svg()
 }, { deep: true })
 
 </script>
