@@ -13,7 +13,9 @@ Problem-driven learning. You can directly copy the answers in the AI response to
 
 In addition, this plugin can count and display the questions you have raised every day for the past three months, so that you can easily review. I think it would be interesting to know what you asked three days ago or what you were interested in a month ago, and compare it to what you're interested in at the moment. This helps us capture the linear part of the non-linear flow of ideas.
 
-<img src="https://github.com/mali-i/obsidian-Deepseek-ai-assistant-plugin/blob/main/images/plugin_example.gif" width="500px" style="display: block; margin: 0 auto;"/>
+<div align="center">
+<img src="https://github.com/mali-i/obsidian-Deepseek-ai-assistant-plugin/blob/main/images/plugin_example.gif" width="400px"/>
+</div>
 
 
 ## 如何使用 how to use
@@ -30,7 +32,15 @@ For more information about obtaining the DeepSeek API key, see https://platform.
 
 By the way, you also need to recharge your own token usage
 
-## 打赏 buy me a coffee
+## 打赏 
+
+
+<div align="center">
+    <img 
+        src="https://github.com/mali-i/deepseek-ai-assistant/blob/main/images/%E5%BE%AE%E4%BF%A1%E8%B5%9E%E8%B5%8F%E7%A0%81.JPG" 
+        width="200px"
+    />
+</div>
 
 
 
