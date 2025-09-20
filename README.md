@@ -30,7 +30,15 @@ For more information about obtaining the DeepSeek API key, see https://platform.
 
 By the way, you also need to recharge your own token usage
 
-## 打赏 buy me a coffee
+## 打赏 
+
+
+<div align="center">
+    <img 
+        src="https://github.com/mali-i/deepseek-ai-assistant/blob/main/images/%E5%BE%AE%E4%BF%A1%E8%B5%9E%E8%B5%8F%E7%A0%81.JPG" 
+        width="200px"
+    />
+</div>
 
 
 
