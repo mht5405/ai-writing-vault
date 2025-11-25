@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <el-aside>
-            <DataPanel/>
+            <DataPanel :plugin="plugin"/>
             <HeatMap/>
             <!-- <ThinkingClue/>
             <WordCloud/> -->
