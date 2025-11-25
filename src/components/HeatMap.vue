@@ -91,6 +91,9 @@ const draw_svg = async ()=>{
      .append('title') // 添加悬浮提示
       .text(d => `${d.date}: ${d.prompts_num} prompts`)
     
+    // 计算并设置SVG的实际高度
+    const svgHeight = svg_left_or_right_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
+    d3.select('#svg_container').attr('height', svgHeight)
 }
 
 const handleClick = (e,v)=>{
@@ -115,9 +118,15 @@ watch(() => promptStore.promptStats, async () => {
 </template>
 
 <style scoped>
-svg{
-    width:100%;
-    margin:10px;
+#container {
+    height: fit-content;
+    overflow: hidden;
 }
 
+svg{
+    width: 100%;
+    height: auto;
+    margin: 3px 10px 3px 10px; /* 上右下左 */
+    display: block; /* 消除inline元素的底部空隙 */
+}
 </style>
