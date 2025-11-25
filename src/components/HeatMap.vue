@@ -126,7 +126,7 @@ watch(() => promptStore.promptStats, async () => {
 svg{
     width: 100%;
     height: auto;
-    margin: 3px 10px 3px 10px; /* 上右下左 */
+    margin: 0 10px 3px 10px; /* 上右下左 */
     display: block; /* 消除inline元素的底部空隙 */
 }
 </style>

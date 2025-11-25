@@ -47,7 +47,7 @@ const onTotalPromptsClick = async () => {
       </div>
       <div class="data-item">
          <b class="data-value">{{ aiDays }}</b>
-         <span class="data-label">天</span>
+         <span class="data-label">Days</span>
       </div>
    </div>
 </template>
@@ -56,13 +56,12 @@ const onTotalPromptsClick = async () => {
 .data-panel {
    height: 50px;
    display: flex;
-   justify-content: center;
+   justify-content: center;   
    align-items: center;
-   gap: 2rem; 
    padding: 2rem 0;
-   background: #f8f9fa;
-   border-radius: 10px;
-   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+   /* background: #f8f9fa; */
+   /* border-radius: 10px; */
+   /* box-shadow: 0 2px 8px rgba(0,0,0,0.04); */
 }
 
 .data-item {
