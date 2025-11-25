@@ -1,6 +1,7 @@
 <template>
     <el-container>
         <el-aside>
+            <DataPanel/>
             <HeatMap/>
             <!-- <ThinkingClue/>
             <WordCloud/> -->
@@ -20,6 +21,7 @@
 <script setup lang="ts">
 import AICard from "./AICard.vue";
 import HeatMap from "./HeatMap.vue";
+import DataPanel from "./DataPanel.vue";
 // import ThinkingClue from "./ThinkingClue.vue";
 // import WordCloud from "./WordCloud.vue";
 import PromptLine from "./PromptLine.vue";
