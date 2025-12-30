@@ -40,53 +40,16 @@ const onTotalPromptsClick = async () => {
 </script>
 
 <template>
-   <div class="data-panel">
-      <div class="data-item">
-         <b class="data-value" @click="onTotalPromptsClick">{{ totalPrompts }}</b>
-         <span class="data-label">Prompts</span>
-      </div>
-      <div class="data-item">
-         <b class="data-value">{{ aiDays }}</b>
-         <span class="data-label">Days</span>
+   <div class="w-full px-4 py-4">
+      <div class="flex justify-between items-center bg-[var(--background-secondary)] rounded-lg p-3 border border-[var(--apple-border)] shadow-sm">
+         <div class="flex flex-col items-center flex-1 border-r border-[var(--apple-border)] cursor-pointer hover:bg-[var(--apple-bg-secondary)] transition-colors rounded-l-md" @click="onTotalPromptsClick">
+            <span class="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-1">Prompts</span>
+            <b class="text-xl font-semibold text-[var(--text-normal)]">{{ totalPrompts }}</b>
+         </div>
+         <div class="flex flex-col items-center flex-1 cursor-default">
+            <span class="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-1">Days</span>
+            <b class="text-xl font-semibold text-[var(--text-normal)]">{{ aiDays }}</b>
+         </div>
       </div>
    </div>
 </template>
-
-<style scoped>
-.data-panel {
-   height: 50px;
-   display: flex;
-   justify-content: center;   
-   align-items: center;
-   padding: 2rem 0;
-   /* background: #f8f9fa; */
-   /* border-radius: 10px; */
-   /* box-shadow: 0 2px 8px rgba(0,0,0,0.04); */
-}
-
-.data-item {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   min-width: 80px;
-}
-
-.data-value {
-   font-size: 1.2rem;
-   font-weight: bold;
-   color: #3b82f6;
-   margin-bottom: 0.2rem;
-   transition: color 0.2s, cursor 0.2s;
-   cursor: pointer;
-}
-.data-value:hover {
-   color: #2563eb;
-   text-shadow: 0 2px 8px rgba(59,130,246,0.08);
-}
-
-.data-label {
-   font-size: 0.8rem;
-   color: #6b7280;
-   letter-spacing: 0.05em;
-}
-</style>

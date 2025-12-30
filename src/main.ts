@@ -1,4 +1,5 @@
 import { Plugin, WorkspaceLeaf, Notice } from "obsidian";
+import "./tailwind.css";
 import { DeepSeekAIAssistant_SettingTab } from "./setting-tab";
 import {SettingsInterfaceType, DEFAULT_SETTINGS} from './settings'  // 导入设置接口类型
 import { DeepSeekAIAssistant_ItemView } from "./my-itemview";

@@ -6,24 +6,29 @@ import { usePromptStore } from '../store/prompts'
 const promptStore = usePromptStore()
 const pixel_width = ref(12)
 const svg_left_or_right_margin = ref(10)
+const svg_top_bottom_margin = ref(10)
 const pixel_margin = ref(5) // rect与右边的rect之间的间隔
 var rect_count_x = ref(0)
-// const promptStats = promptStore.promptStats // 不要另外再单独赋值！这样用，监听不到响应式变化
 
 const observer = new ResizeObserver(entries =>{
     for(let entry of entries){
         var newWidth = entry.contentRect.width
-        // console.log(`新宽度：${newWidth}px`)
-        // 随着svg宽度的拖拽，计算新宽度里，一行可以放多少个rect
-        rect_count_x.value = Math.floor((newWidth - svg_left_or_right_margin.value * 2 - pixel_margin.value) / (pixel_width.value + pixel_margin.value))
-        // console.log(`${rect_count_x}`)
+        const min_margin = 10
+        const col_width = pixel_width.value + pixel_margin.value
+        
+        // Calculate max columns
+        const count = Math.floor((newWidth - 2 * min_margin + pixel_margin.value) / col_width)
+        rect_count_x.value = Math.max(1, count)
+        
+        // Calculate centered margin
+        const used_width = rect_count_x.value * col_width - pixel_margin.value
+        svg_left_or_right_margin.value = (newWidth - used_width) / 2
     }
 })
 
-// 监听rect_count_x的变化
-watch(rect_count_x,(newValue, oldValue)=>{
-    // console.log(`一行里面的rect的个数是${newValue}`)
-    draw_svg() // 根据这个rect_count_x，重新绘制svg
+// 监听变化
+watch([rect_count_x, svg_left_or_right_margin],()=>{
+    draw_svg() 
 })
 
 onMounted(async ()=>{
@@ -62,37 +67,39 @@ const draw_svg = async ()=>{
      .enter().append('rect')
       .attr('width', pixel_width.value)
       .attr('height', pixel_width.value)
-      .attr('fill','#4A90E2')
+      .attr('rx', 3) // 圆角
+      .attr('ry', 3)
       .attr('x',(d,i)=>{
         const col = Math.floor(i / 7) // 计算当前rect是第几列
         return svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * (col)    
       })
       .attr('y',(d,i)=>{
         const row = i % 7 // 计算当前rect是第几行
-        return svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * (row)    
+        return svg_top_bottom_margin.value + (pixel_width.value + pixel_margin.value) * (row)    
       })
       .attr('fill', v => {
         if (v.prompts_num == 0) {
-            return '#EFEFEF'  // 表示无数据
+            return 'var(--apple-bg-secondary)'  // 使用 CSS 变量适配深色模式
         }
 
         if (v.prompts_num > 14) {
-            return '#2C82C9'  // 深蓝色，表示多条数据
+            return 'var(--apple-blue)'  // 深蓝色
         }
         if(v.prompts_num >9){
-            return '#4A90E2'
+            return 'rgba(0, 122, 255, 0.8)'
         }
         if(v.prompts_num >4){
-            return '#7CB9E8'
+            return 'rgba(0, 122, 255, 0.6)'
         }
-        return '#A7C7E7'  // 浅蓝色，表示一条数据
+        return 'rgba(0, 122, 255, 0.4)'  // 浅蓝色
         })
      .on('click', (e,v)=>handleClick(e,v))
+     .style('cursor', 'pointer') // 添加鼠标手势
      .append('title') // 添加悬浮提示
       .text(d => `${d.date}: ${d.prompts_num} prompts`)
     
     // 计算并设置SVG的实际高度
-    const svgHeight = svg_left_or_right_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
+    const svgHeight = svg_top_bottom_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
     d3.select('#svg_container').attr('height', svgHeight)
 }
 
@@ -112,21 +119,9 @@ watch(() => promptStore.promptStats, async () => {
 </script>
 
 <template>
-    <div id="container">
-        <svg id="svg_container"></svg>
+    <div id="container" class="w-full">
+        <div class="bg-[var(--background-secondary)] overflow-hidden">
+            <svg id="svg_container" class="w-full h-auto block"></svg>
+        </div>
     </div> 
 </template>
-
-<style scoped>
-#container {
-    height: fit-content;
-    overflow: hidden;
-}
-
-svg{
-    width: 100%;
-    height: auto;
-    margin: 0 10px 3px 10px; /* 上右下左 */
-    display: block; /* 消除inline元素的底部空隙 */
-}
-</style>
