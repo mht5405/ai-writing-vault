@@ -3,7 +3,7 @@
 [中文](#中文) | [English](#english)
 
 <div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="800px" alt="DeepSeek AI Assistant Interface"/>
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
 </div>
 
 ---
@@ -14,6 +14,10 @@
 DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知识积累的工具。它旨在帮助用户记录提问过程，将零散的 AI 对话转化为可追溯的知识资产。
 
 ### 主要功能
+
+<div align="center">
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="500px" alt="DeepSeek AI Assistant Demo"/>
+</div>
 
 #### Prompts 管理与检索：构建您的知识资产
 插件不仅仅是记录，更是对思维的沉淀。通过**关键词筛选**功能，您可以瞬间从成百上千条历史记录中找回曾经的灵感或复杂的解决方案。这种“即时复用”的能力，让每一条 Prompt 都不再是消耗品，而是转化为您个人知识库中可随时调用的**知识资产**。
@@ -47,6 +51,10 @@ DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知�
 </div>
 
 ---
+<div align="center">
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="700px" alt="DeepSeek AI Assistant Demo"/>
+</div>
+
 
 
 ### Features
