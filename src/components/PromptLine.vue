@@ -60,10 +60,10 @@
             class="relative pl-6 group"
           >
             <!-- Vertical Line (Connects to next item) -->
-            <div v-if="index !== sortedPromptContent.length - 1" class="absolute left-0 top-3 h-[calc(100%+24px)] w-[2px] bg-[#007AFF]"></div>
+            <div v-if="index !== sortedPromptContent.length - 1" class="absolute left-0 top-3 h-[calc(100%+24px)] w-[2px] bg-[var(--background-modifier-border)]"></div>
 
             <!-- Timeline Dot -->
-            <div class="absolute -left-[4.5px] top-3 w-[11px] h-[11px] rounded-full bg-[#007AFF] border-2 border-[#007AFF] group-hover:scale-125 group-hover:shadow-[0_0_0_3px_rgba(0,122,255,0.3)] transition-all duration-200 z-10"></div>
+            <div class="absolute -left-[4.5px] top-3 w-[11px] h-[11px] rounded-full bg-[#007AFF]/50 border-2 border-[#007AFF]/50 group-hover:scale-125 group-hover:shadow-[0_0_0_3px_rgba(0,122,255,0.2)] transition-all duration-200 z-10"></div>
             
             <!-- Timestamp -->
             <div class="flex justify-between items-center mb-2">
