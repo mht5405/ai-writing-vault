@@ -9,6 +9,7 @@ import { usePromptStore } from "./store/prompts";
 export class DeepSeekAIAssistant_ItemView extends ItemView{
     plugin: Plugin_Deepseek_AI_Assistant;
     private promptStore: any;
+    private pluginStore: any;
 
     constructor(leaf: WorkspaceLeaf, plugin: Plugin_Deepseek_AI_Assistant) {
         super(leaf);
@@ -43,6 +44,7 @@ export class DeepSeekAIAssistant_ItemView extends ItemView{
         vueApp.use(pinia)  
         
         const pluginStore = usePluginStore(pinia)  
+        this.pluginStore = pluginStore;
         pluginStore.setPlugin(this.plugin)
 
         this.promptStore = usePromptStore(pinia);
@@ -54,6 +56,9 @@ export class DeepSeekAIAssistant_ItemView extends ItemView{
     public openChat(id: string) {
         if (this.promptStore) {
             this.promptStore.findAndSelectPromptById(id);
+        if (this.pluginStore) {
+            this.pluginStore.setSidebarOpen(false);
+        }
         }
     }
 }

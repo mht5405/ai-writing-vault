@@ -55,15 +55,18 @@ import HeatMap from "./HeatMap.vue";
 import DataPanel from "./DataPanel.vue";
 import PromptLine from "./PromptLine.vue";
 import { ref, onUnmounted } from 'vue';
+import { usePluginStore } from "../store/plugin";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
     plugin: any
 }>();
 
-// 侧边栏状态
-const isSidebarOpen = ref(true);
+const pluginStore = usePluginStore();
+const { isSidebarOpen } = storeToRefs(pluginStore);
+
 const toggleSidebar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value;
+    pluginStore.toggleSidebar();
 };
 
 // 侧边栏宽度控制
