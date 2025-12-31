@@ -50,25 +50,28 @@
     <div class="flex-1 overflow-y-auto px-4 pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-black/10 dark:scrollbar-thumb-white/10">
       <div class="pl-2">
         <!-- Timeline Container -->
-        <div class="relative border-l-2 border-apple-blue/20 ml-2 space-y-6 pb-2">
+        <div class="relative ml-2 space-y-6 pb-2">
           <div v-if="sortedPromptContent.length === 0" class="pl-6 text-sm text-[var(--text-muted)] italic">
             No prompts found.
           </div>
           <div 
-            v-for="item in sortedPromptContent"
+            v-for="(item, index) in sortedPromptContent"
             :key="item.id_timestamp"
             class="relative pl-6 group"
           >
+            <!-- Vertical Line (Connects to next item) -->
+            <div v-if="index !== sortedPromptContent.length - 1" class="absolute left-0 top-3 h-[calc(100%+24px)] w-[2px] bg-[var(--background-modifier-border)]"></div>
+
             <!-- Timeline Dot -->
-            <div class="absolute -left-[6.5px] top-3 w-[11px] h-[11px] rounded-full bg-[var(--background-primary)] border-2 border-apple-blue group-hover:bg-apple-blue transition-all duration-200 z-10 -translate-x-[1px]"></div>
+            <div class="absolute -left-[4.5px] top-3 w-[11px] h-[11px] rounded-full bg-[#007AFF] border-2 border-[#007AFF] group-hover:scale-125 group-hover:shadow-[0_0_0_3px_rgba(0,122,255,0.3)] transition-all duration-200 z-10"></div>
             
             <!-- Timestamp -->
-            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none group-hover:text-apple-blue transition-colors duration-200">
+            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none group-hover:text-[#007AFF] transition-colors duration-200">
               {{ formatTime(item.id_timestamp) }}
             </div>
 
             <!-- Card -->
-            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--background-modifier-border)] select-text group-hover:border-apple-blue group-hover:shadow-sm" @click="clickItem(item)">
+            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--background-modifier-border)] select-text group-hover:border-apple-blue group-hover:shadow-sm group-active:border-apple-blue group-active:shadow-md" @click="clickItem(item)">
               <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
             </div>
           </div>
