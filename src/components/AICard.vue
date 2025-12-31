@@ -41,7 +41,7 @@
                     <div class="absolute bottom-3 right-3 left-3 flex justify-between items-center">
                         <!-- Model Selector -->
                         <div class="relative group">
-                            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--apple-bg-secondary)] hover:bg-[var(--background-modifier-hover)] transition-colors cursor-pointer border border-transparent hover:border-[var(--apple-border)]">
+                            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-[var(--apple-border)]">
                                 <select 
                                     v-model="chatModel" 
                                     class="appearance-none bg-transparent border-none text-[12px] font-medium text-[var(--text-normal)] cursor-pointer pr-4 focus:outline-none font-sans"
