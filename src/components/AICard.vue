@@ -116,7 +116,7 @@ const copyLink = (id: string) => {
         // 防止 [] 破坏 markdown 链接语法
         linkText = linkText.replace(/[\[\]]/g, ''); 
     }
-    const link = `[${linkText}](obsidian://deepseek-ai-assistant?id=${id})`;
+    const link = `[${linkText}](obsidian://deepseek-ai-assistant?id=${id} "Open plugin:deepseek-ai-assistant")`;
     navigator.clipboard.writeText(link);
     new Notice('Link copied to clipboard!');
 }
@@ -124,15 +124,18 @@ const copyLink = (id: string) => {
 const adjustHeight = () => {
     const textarea = textareaRef.value;
     if (textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        // 使用 requestAnimationFrame 避免 ResizeObserver loop 错误
+        window.requestAnimationFrame(() => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
     }
 }
 
 watch(inputContent, () => {
     nextTick(adjustHeight);
 });
-
+answerContainerRef.value;
 watch(historyAnswer,async ()=>{
     // console.log('监听answerContainerRef.value;
     const container = document.querySelector('.answer-field') as HTMLElement
