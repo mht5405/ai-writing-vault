@@ -8,7 +8,7 @@ export const usePromptStore = defineStore('prompts',()=>{
 
     const promptStats = ref()
     const selectedDate = ref(new Date().toISOString().split('T')[0])
-    const historyCard = ref("")
+    const historyCard = ref<any>(null)
 
     // 初始化时从插件设置里加载数据
     if (pluginStore.plugin) {
@@ -43,9 +43,26 @@ export const usePromptStore = defineStore('prompts',()=>{
         await pluginStore.plugin.saveSettings();
     }
 
-    function updateHistoryCard(answer: any){
-        historyCard.value = answer
+    function updateHistoryCard(item: any){
+        historyCard.value = item
         // console.log('item被点击')
     }
-    return {promptStats, addPrompt, selectedDate, updateHistoryCard, historyCard}
+
+    function findAndSelectPromptById(id: string) {
+        if (!promptStats.value) return;
+        
+        for (const date in promptStats.value) {
+            const dayStats = promptStats.value[date];
+            if (dayStats && dayStats.prompt_content) {
+                const found = dayStats.prompt_content.find((p: any) => p.id_timestamp === id);
+                if (found) {
+                    updateHistoryCard(found);
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    return {promptStats, addPrompt, selectedDate, updateHistoryCard, historyCard, findAndSelectPromptById}
 })

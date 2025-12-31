@@ -4,9 +4,12 @@ import { createApp } from "vue";
 import MainTemplate from "./components/MainTemplate.vue";
 import { createPinia} from 'pinia'
 import { usePluginStore } from "./store/plugin";
+import { usePromptStore } from "./store/prompts";
 
 export class DeepSeekAIAssistant_ItemView extends ItemView{
     plugin: Plugin_Deepseek_AI_Assistant;
+    private promptStore: any;
+
     constructor(leaf: WorkspaceLeaf, plugin: Plugin_Deepseek_AI_Assistant) {
         super(leaf);
         this.plugin = plugin;
@@ -42,7 +45,15 @@ export class DeepSeekAIAssistant_ItemView extends ItemView{
         const pluginStore = usePluginStore(pinia)  
         pluginStore.setPlugin(this.plugin)
 
+        this.promptStore = usePromptStore(pinia);
+
         vueApp.mount(containerEl);
         
+    }
+
+    public openChat(id: string) {
+        if (this.promptStore) {
+            this.promptStore.findAndSelectPromptById(id);
+        }
     }
 }

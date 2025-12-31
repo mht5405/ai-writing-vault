@@ -18,7 +18,7 @@
           </div>
 
           <!-- Card -->
-          <div class="bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--apple-border)] select-text hover:bg-[var(--apple-bg-secondary)] hover:translate-x-1 hover:shadow-sm hover:border-transparent" @click="clickItem(item.answer)">
+          <div class="bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--apple-border)] select-text hover:bg-[var(--apple-bg-secondary)] hover:translate-x-1 hover:shadow-sm hover:border-transparent" @click="clickItem(item)">
             <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
           </div>
         </div>
@@ -83,8 +83,8 @@ const formatTime = (timestamp: string) => {
   }
 }
 
-const clickItem = (answer: any)=>{
-  promptStore.updateHistoryCard(answer)
+const clickItem = (item: any)=>{
+  promptStore.updateHistoryCard(item)
 }
 
 // 添加清除选中文本的函数
