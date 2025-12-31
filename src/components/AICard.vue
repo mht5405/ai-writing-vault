@@ -8,6 +8,9 @@
                 </svg>
                 <span class="text-sm font-medium">Start a conversation</span>
             </div>
+            <div v-if="isThinking" class="absolute inset-0 z-10">
+                <ThinkingClue />
+            </div>
             <div ref="answerContainerRef" class="answer-field absolute inset-0 overflow-y-auto p-6 font-sans leading-relaxed select-text cursor-text prose dark:prose-invert max-w-none"></div>
         </div>
 
@@ -75,6 +78,7 @@ import { ref, computed , watch, nextTick} from 'vue';
 import { OpenAI } from 'openai';
 import {MarkdownRenderer, Notice} from 'obsidian';
 import {usePromptStore} from '../store/prompts'
+import ThinkingClue from './ThinkingClue.vue'
 
 const props = defineProps<{
     plugin: any
@@ -82,6 +86,7 @@ const props = defineProps<{
 
 const inputContent = ref('');
 const isLoading = ref(false);
+const isThinking = ref(false);
 const hasResponse = ref(false);
 const promptStore = usePromptStore()
 const chatModel = ref('deepseek-reasoner')
@@ -133,6 +138,7 @@ const submit = async () => {
     const container = answerContainerRef.value;
     if(container) container.empty();
     isLoading.value = true;  // 开始加载
+    isThinking.value = true;
     hasResponse.value = false;
 
     try {
@@ -156,6 +162,9 @@ const submit = async () => {
         for await (const chunk of completion) {
             const content = chunk.choices[0]?.delta?.content || '';
             if (content) {
+                if (isThinking.value) {
+                    isThinking.value = false;
+                }
                 fullResponse += content;
                 // 实时渲染 Markdown 内容
                 if(container) {
@@ -179,6 +188,7 @@ const submit = async () => {
             hasResponse.value = true;
         }
     } catch (error: any) {
+        isThinking.value = false;
         // console.log('---Error:', error);
         if(container) {
             await MarkdownRenderer.render(
@@ -191,6 +201,7 @@ const submit = async () => {
         }
     } finally {
         isLoading.value = false;  // 结束加载
+        isThinking.value = false;
     }
 }
 </script>
