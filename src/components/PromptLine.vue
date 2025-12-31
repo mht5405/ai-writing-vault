@@ -120,8 +120,12 @@ onMounted(() => {
 });
 
 const selectedDate = computed(()=>{
-  // console.log(promptStore.selectedDate)
-  return promptStore.selectedDate
+  if (!promptStore.selectedDate) return '';
+  const date = new Date(promptStore.selectedDate);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}/${month}/${day}`;
 })
 
 let selectedPromptStats = computed(()=>{
@@ -203,13 +207,11 @@ const formatTime = (timestamp: string) => {
 
     // 如果处于搜索模式，显示完整日期和时间
     if (searchQuery.value.trim()) {
-      return date.toLocaleString(undefined, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return `${year}/${month}/${day} ${time}`;
     }
     
     // 默认模式只显示时间

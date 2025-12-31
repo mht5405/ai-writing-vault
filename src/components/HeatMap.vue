@@ -74,6 +74,9 @@ onMounted(async ()=>{
 const draw_svg = async ()=>{
     await nextTick() // 等待DOM更新完成
     d3.select('#svg_container').selectAll('rect').remove()
+    d3.select('#svg_container').selectAll('text').remove()
+    
+    const month_label_height = 20
     // 日期方块的个数应该是： rect_count_x * 7
     // svg中的日期方块的渲染布局应该是先纵向布局，再横向布局。纵向布局7个日期方块，再横向布局
     // 要从jsonData中读取对应个数的日期方, 从当前日期往前推 rect_count_x * 7 个日期方块
@@ -98,6 +101,53 @@ const draw_svg = async ()=>{
     const col_width = pixel_width.value + pixel_margin.value
     const total_width = rect_count_x.value * col_width - pixel_margin.value + 2 * svg_left_or_right_margin.value
     d3.select('#svg_container').attr('width', total_width)
+
+    // Add month labels
+    const month_labels = []
+    let last_month = -1
+    let last_year = -1
+    date_list.forEach((d, i) => {
+        const date = new Date(d.date)
+        const month = date.getMonth()
+        const year = date.getFullYear()
+        
+        if (month !== last_month || year !== last_year) {
+            const col = Math.floor(i / 7)
+            // Only add if it's not too close to the previous label (at least 3 columns apart)
+            if (month_labels.length === 0 || col - month_labels[month_labels.length-1].col >= 3) {
+                month_labels.push({
+                    name: date.toLocaleString('en-US', { month: 'short' }),
+                    year: year,
+                    col: col
+                })
+            }
+            last_month = month
+            last_year = year
+        }
+    })
+
+    // Finalize label names: show year on first, last, and when year changes
+    month_labels.forEach((label, idx) => {
+        const isFirst = idx === 0
+        const isLast = idx === month_labels.length - 1
+        const yearChanged = !isFirst && label.year !== month_labels[idx-1].year
+        
+        if (isFirst || isLast || yearChanged) {
+            label.name = `${label.year}/${label.name}`
+        }
+    })
+
+    d3.select('#svg_container').selectAll('text.month-label')
+        .data(month_labels)
+        .enter()
+        .append('text')
+        .attr('class', 'month-label')
+        .attr('x', d => svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * d.col)
+        .attr('y', svg_top_bottom_margin.value + 10)
+        .attr('font-size', '10px')
+        .attr('font-family', 'var(--apple-font)')
+        .attr('fill', 'var(--text-muted)')
+        .text(d => d.name)
     
     d3.select('#svg_container').selectAll('rect').data(date_list)
      .enter().append('rect')
@@ -111,7 +161,7 @@ const draw_svg = async ()=>{
       })
       .attr('y',(d,i)=>{
         const row = i % 7 // 计算当前rect是第几行
-        return svg_top_bottom_margin.value + (pixel_width.value + pixel_margin.value) * (row)    
+        return svg_top_bottom_margin.value + month_label_height + (pixel_width.value + pixel_margin.value) * (row)    
       })
       .attr('fill', v => {
         if (v.prompts_num == 0) {
@@ -135,7 +185,7 @@ const draw_svg = async ()=>{
       .text(d => `${d.date}: ${d.prompts_num} prompts`)
     
     // 计算并设置SVG的实际高度
-    const svgHeight = svg_top_bottom_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
+    const svgHeight = svg_top_bottom_margin.value * 2 + month_label_height + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
     d3.select('#svg_container').attr('height', svgHeight)
 
     // 绘制完成后，如果是初始化或宽度增加，滚动到最右侧（显示最新日期）
