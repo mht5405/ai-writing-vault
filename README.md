@@ -20,7 +20,7 @@ DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知�
 </div>
 
 #### Prompts 管理与检索：构建您的知识资产
-插件不仅仅是记录，更是对思维的沉淀。通过**关键词筛选**功能，您可以瞬间从成百上千条历史记录中找回曾经的灵感或复杂的解决方案。这种“即时复用”的能力，让每一条 Prompt 都不再是消耗品，而是转化为您个人知识库中可随时调用的**知识资产**。
+插件不仅仅是记录，更是对思维的沉淀。通过**关键词筛选**功能，您可以瞬间过往记录中找回曾经的灵感或复杂的解决方案。这种“即时复用”的能力，让每一条 Prompt 都不再是消耗品，而是转化为您个人知识库中可随时调用的**知识资产**。
 
 #### Timeline 历史时间轴
 侧边栏内置了直观的 Timeline 视图，按日期对您的提问进行分类展示。您可以轻松回溯到特定的一天，查看当时的思考脉络。这种基于时间的组织方式，帮助您发现自己学习兴趣的迁移和思维深度的演进。
@@ -68,7 +68,7 @@ DeepSeek AI Assistant is a tool designed to help Obsidian users manage prompts a
 </div>
 
 #### Prompts Management & Search: Building Your Knowledge Assets
-The plugin is more than just a logger; it's a repository for your thoughts. With powerful **keyword filtering**, you can instantly retrieve past inspirations or complex solutions from hundreds of historical records. This "instant reuse" capability transforms every prompt from a one-time interaction into a **digital asset** that can be invoked at any time within your personal knowledge base.
+The plugin is more than just a logger; it's a repository for your thoughts. With powerful **keyword filtering**, you can instantly retrieve past inspirations or complex solutions from historical records. This "instant reuse" capability transforms every prompt from a one-time interaction into a **digital asset** that can be invoked at any time within your personal knowledge base.
 
 #### Timeline View
 The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth.
