@@ -17,6 +17,14 @@ export default class Plugin_Deepseek_AI_Assistant extends Plugin {
             this.activateView();
         });
 
+        this.addCommand({
+            id: 'open-deepseek-ai-assistant',
+            name: 'Open deepseek AI assistant',
+            callback: () => {
+                this.activateView();
+            }
+        });
+
         this.registerObsidianProtocolHandler("deepseek-ai-assistant", async (params: ObsidianProtocolData) => {
             if (params.action === "deepseek-ai-assistant" && params.id) {
                 this.handleOpenChat(params.id);
