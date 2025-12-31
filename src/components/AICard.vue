@@ -142,29 +142,38 @@ const submit = async () => {
             dangerouslyAllowBrowser: true
         });
 
+        let fullResponse = '';
         const completion = await openai.chat.completions.create({
             messages: [
                 {role: "system", content:'你是一个AI助手，请根据用户的问题给出回答'},
                 {role: "user", content: inputContent.value}
             ],
             model: chatModel.value,
-            stream: false
+            stream: true
         });
 
-        const response = completion.choices[0].message.content;
-        if (response) {
-            if(container) {
-                await MarkdownRenderer.render(
-                    props.plugin.app,
-                    response,
-                    container,
-                    '/',
-                    props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
-                );
+        // 处理流式响应
+        for await (const chunk of completion) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+                fullResponse += content;
+                // 实时渲染 Markdown 内容
+                if(container) {
+                    container.empty();
+                    await MarkdownRenderer.render(
+                        props.plugin.app,
+                        fullResponse,
+                        container,
+                        '/',
+                        props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
+                    );
+                }
             }
+        }
 
+        if (fullResponse) {
             // 保存对话到 store
-            promptStore.addPrompt(inputContent.value, response)
+            promptStore.addPrompt(inputContent.value, fullResponse)
             // 清空输入框
             inputContent.value = '';
             hasResponse.value = true;
