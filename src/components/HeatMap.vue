@@ -9,6 +9,10 @@ const svg_left_or_right_margin = ref(10)
 const svg_top_bottom_margin = ref(10)
 const pixel_margin = ref(5) // rect与右边的rect之间的间隔
 var rect_count_x = ref(0)
+const scrollContainer = ref(null)
+const isDragging = ref(false)
+let startX
+let scrollLeft
 
 const observer = new ResizeObserver(entries =>{
     for(let entry of entries){
@@ -16,15 +20,42 @@ const observer = new ResizeObserver(entries =>{
         const min_margin = 10
         const col_width = pixel_width.value + pixel_margin.value
         
-        // Calculate max columns
-        const count = Math.floor((newWidth - 2 * min_margin + pixel_margin.value) / col_width)
-        rect_count_x.value = Math.max(1, count)
+        // Calculate how many columns fit
+        const fitCount = Math.floor((newWidth - 2 * min_margin + pixel_margin.value) / col_width)
         
-        // Calculate centered margin
-        const used_width = rect_count_x.value * col_width - pixel_margin.value
-        svg_left_or_right_margin.value = (newWidth - used_width) / 2
+        // We want at least 53 weeks (1 year) to be available for scrolling
+        // but if the sidebar is wider than 53 weeks, we show more to fill it.
+        rect_count_x.value = Math.max(53, fitCount)
+        
+        // If it fits exactly or is smaller than 53, we don't need to center it with large margins
+        // because it will be scrollable.
+        if (rect_count_x.value > fitCount) {
+            svg_left_or_right_margin.value = 10 // Fixed small margin when scrollable
+        } else {
+            // Center it if it fits within the width
+            const used_width = rect_count_x.value * col_width - pixel_margin.value
+            svg_left_or_right_margin.value = (newWidth - used_width) / 2
+        }
     }
 })
+
+const startDragging = (e) => {
+    isDragging.value = true
+    startX = e.pageX - scrollContainer.value.offsetLeft
+    scrollLeft = scrollContainer.value.scrollLeft
+}
+
+const stopDragging = () => {
+    isDragging.value = false
+}
+
+const doDragging = (e) => {
+    if (!isDragging.value) return
+    e.preventDefault()
+    const x = e.pageX - scrollContainer.value.offsetLeft
+    const walk = (x - startX) * 1.5 // scroll speed
+    scrollContainer.value.scrollLeft = scrollLeft - walk
+}
 
 // 监听变化
 watch([rect_count_x, svg_left_or_right_margin],()=>{
@@ -34,7 +65,9 @@ watch([rect_count_x, svg_left_or_right_margin],()=>{
 onMounted(async ()=>{
     // console.log('这里是onMounted钩子')
     await nextTick() // 等待DOM更新完成
-    observer.observe(document.getElementById('svg_container'))
+    if (scrollContainer.value) {
+        observer.observe(scrollContainer.value)
+    }
     draw_svg();
 })
 
@@ -62,6 +95,9 @@ const draw_svg = async ()=>{
     }
     // console.log(date_list)
 
+    const col_width = pixel_width.value + pixel_margin.value
+    const total_width = rect_count_x.value * col_width - pixel_margin.value + 2 * svg_left_or_right_margin.value
+    d3.select('#svg_container').attr('width', total_width)
     
     d3.select('#svg_container').selectAll('rect').data(date_list)
      .enter().append('rect')
@@ -101,6 +137,13 @@ const draw_svg = async ()=>{
     // 计算并设置SVG的实际高度
     const svgHeight = svg_top_bottom_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
     d3.select('#svg_container').attr('height', svgHeight)
+
+    // 绘制完成后，如果是初始化或宽度增加，滚动到最右侧（显示最新日期）
+    nextTick(() => {
+        if (scrollContainer.value && !isDragging.value) {
+            scrollContainer.value.scrollLeft = scrollContainer.value.scrollWidth
+        }
+    })
 }
 
 const handleClick = (e,v)=>{
@@ -119,9 +162,26 @@ watch(() => promptStore.promptStats, async () => {
 </script>
 
 <template>
-    <div id="container" class="w-full">
-        <div class="bg-[var(--background-secondary)] overflow-hidden">
-            <svg id="svg_container" class="w-full h-auto block"></svg>
+    <div id="container" class="w-full overflow-hidden">
+        <div 
+            ref="scrollContainer"
+            class="bg-[var(--background-secondary)] overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing select-none"
+            @mousedown="startDragging"
+            @mousemove="doDragging"
+            @mouseup="stopDragging"
+            @mouseleave="stopDragging"
+        >
+            <svg id="svg_container" class="h-auto block"></svg>
         </div>
     </div> 
 </template>
+
+<style scoped>
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+</style>
