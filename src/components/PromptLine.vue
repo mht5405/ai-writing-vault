@@ -60,14 +60,28 @@
             class="relative pl-6 group"
           >
             <!-- Vertical Line (Connects to next item) -->
-            <div v-if="index !== sortedPromptContent.length - 1" class="absolute left-0 top-3 h-[calc(100%+24px)] w-[2px] bg-[var(--background-modifier-border)]"></div>
+            <div v-if="index !== sortedPromptContent.length - 1" class="absolute left-0 top-3 h-[calc(100%+24px)] w-[2px] bg-[#007AFF]"></div>
 
             <!-- Timeline Dot -->
             <div class="absolute -left-[4.5px] top-3 w-[11px] h-[11px] rounded-full bg-[#007AFF] border-2 border-[#007AFF] group-hover:scale-125 group-hover:shadow-[0_0_0_3px_rgba(0,122,255,0.3)] transition-all duration-200 z-10"></div>
             
             <!-- Timestamp -->
-            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none group-hover:text-[#007AFF] transition-colors duration-200">
-              {{ formatTime(item.id_timestamp) }}
+            <div class="flex justify-between items-center mb-2">
+              <div class="font-sans text-xs text-[var(--text-muted)] select-none group-hover:text-[#007AFF] transition-colors duration-200">
+                {{ formatTime(item.id_timestamp) }}
+              </div>
+              
+              <!-- Copy Link Button (Visible on Hover) -->
+              <button 
+                @click.stop="copyLink(item)"
+                class="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--background-modifier-hover)] text-[var(--text-muted)] hover:text-[var(--text-normal)] transition-all duration-200"
+                title="Copy Link to Note"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+              </button>
             </div>
 
             <!-- Card -->
@@ -83,6 +97,7 @@
 
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted } from 'vue';
+import { Notice } from 'obsidian';
 import {usePromptStore} from '../store/prompts'
 
 const isInputFocused = ref(false);
@@ -207,6 +222,20 @@ const formatTime = (timestamp: string) => {
 
 const clickItem = (item: any)=>{
   promptStore.updateHistoryCard(item)
+}
+
+const copyLink = (item: any) => {
+    let linkText = 'AI Chat';
+    if (item && item.prompt) {
+        // 获取 prompt，移除换行符，截取前 30 个字符
+        const promptText = item.prompt.replace(/[\r\n]+/g, ' ').trim();
+        linkText = promptText.length > 30 ? promptText.substring(0, 30) + '...' : promptText;
+        // 防止 [] 破坏 markdown 链接语法
+        linkText = linkText.replace(/[\[\]]/g, ''); 
+    }
+    const link = `[${linkText}](obsidian://deepseek-ai-assistant?id=${item.id_timestamp} "Open plugin:deepseek-ai-assistant")`;
+    navigator.clipboard.writeText(link);
+    new Notice('Link copied to clipboard!');
 }
 
 // 添加清除选中文本的函数

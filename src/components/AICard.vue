@@ -2,20 +2,6 @@
     <div class="flex flex-col h-full p-2 max-w-[900px] mx-auto w-full">
         <!-- Answer Area -->
         <div class="flex-1 overflow-hidden relative rounded-xl bg-transparent mb-6 group/answer">
-            <!-- Copy Link Button -->
-            <div v-if="historyItem" class="absolute top-2 right-2 z-10 opacity-0 group-hover/answer:opacity-100 transition-opacity duration-200">
-                <button 
-                    @click="copyLink(historyItem.id_timestamp)"
-                    class="p-1.5 rounded-md bg-[var(--background-primary)] border border-[var(--apple-border)] text-[var(--text-muted)] hover:text-[var(--text-normal)] hover:bg-[var(--background-modifier-hover)] shadow-sm transition-all"
-                    title="Copy Link to Note"
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                    </svg>
-                </button>
-            </div>
-
             <div v-if="!historyAnswer && !isLoading && !hasResponse" class="absolute inset-0 flex flex-col items-center justify-center text-[var(--text-muted)] opacity-50 pointer-events-none">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-4 overflow-visible">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -106,20 +92,6 @@ const historyItem = computed(() => promptStore.historyCard)
 const historyAnswer = computed(()=>{
     return historyItem.value?.answer || ''
 })
-
-const copyLink = (id: string) => {
-    let linkText = 'AI Chat';
-    if (historyItem.value && historyItem.value.prompt) {
-        // 获取 prompt，移除换行符，截取前 30 个字符
-        const promptText = historyItem.value.prompt.replace(/[\r\n]+/g, ' ').trim();
-        linkText = promptText.length > 30 ? promptText.substring(0, 30) + '...' : promptText;
-        // 防止 [] 破坏 markdown 链接语法
-        linkText = linkText.replace(/[\[\]]/g, ''); 
-    }
-    const link = `[${linkText}](obsidian://deepseek-ai-assistant?id=${id} "Open plugin:deepseek-ai-assistant")`;
-    navigator.clipboard.writeText(link);
-    new Notice('Link copied to clipboard!');
-}
 
 const adjustHeight = () => {
     const textarea = textareaRef.value;
