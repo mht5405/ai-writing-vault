@@ -1,7 +1,7 @@
 <template>
-    <div class="flex flex-col h-full p-6 max-w-[900px] mx-auto w-full">
+    <div class="flex flex-col h-full p-2 max-w-[900px] mx-auto w-full">
         <!-- Answer Area -->
-        <div class="flex-1 overflow-hidden relative rounded-xl bg-transparent shadow-sm border border-[var(--apple-border)] mb-6 group/answer">
+        <div class="flex-1 overflow-hidden relative rounded-xl bg-transparent mb-6 group/answer">
             <!-- Copy Link Button -->
             <div v-if="historyItem" class="absolute top-2 right-2 z-10 opacity-0 group-hover/answer:opacity-100 transition-opacity duration-200">
                 <button 
