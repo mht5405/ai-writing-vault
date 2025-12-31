@@ -1,78 +1,145 @@
 <template>
-    <div class="ai-card">
-        <div class="input-section">
-            <div class="input-wrapper">
-                <div class="textarea-container">
+    <div class="flex flex-col h-full p-2 max-w-[900px] mx-auto w-full">
+        <!-- Answer Area -->
+        <div class="flex-1 overflow-hidden relative rounded-xl bg-transparent mb-6 group/answer">
+            <div v-if="!historyAnswer && !isLoading && !hasResponse" class="absolute inset-0 flex flex-col items-center justify-center text-[var(--text-muted)] opacity-50 pointer-events-none">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-4 overflow-visible">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="text-sm font-medium">Start a conversation</span>
+            </div>
+            <div v-if="isThinking" class="absolute inset-0 z-10">
+                <ThinkingClue />
+            </div>
+            <div ref="answerContainerRef" class="answer-field absolute inset-0 overflow-y-auto p-6 font-sans leading-relaxed select-text cursor-text prose dark:prose-invert max-w-none"></div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="flex-none">
+            <div class="w-full flex flex-col gap-3">
+                <div class="relative w-full bg-[var(--background-primary)] rounded-xl shadow-sm border border-[var(--apple-border)] transition-all duration-300 focus-within:ring-2 focus-within:ring-apple-blue/20 focus-within:border-apple-blue hover:shadow-md">
                     <textarea 
-                        class="input-field" 
+                        ref="textareaRef"
+                        class="w-full p-4 pb-14 border-none rounded-xl resize-none text-[15px] leading-relaxed bg-transparent text-[var(--text-normal)] min-h-[120px] max-h-[250px] overflow-y-auto font-sans outline-none placeholder:text-[var(--text-muted)]" 
                         v-model="inputContent" 
-                        placeholder="请输入内容..."
+                        placeholder="Ask anything..."
+                        @input="adjustHeight"
                     ></textarea>
-                    <div class="button-container">
-                        <select name="model-select" v-model="chatModel" class="model-select">
-                            <option value="deepseek-reasoner">Deepseek-R1</option>
-                            <option value="deepseek-chat">Deepseek-V3</option>
-                        </select>
+                    
+                    <!-- Controls Bar -->
+                    <div class="absolute bottom-3 right-3 left-3 flex justify-between items-center">
+                        <!-- Model Selector -->
+                        <div class="relative group">
+                            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-[var(--apple-border)]">
+                                <select 
+                                    v-model="chatModel" 
+                                    class="appearance-none bg-transparent border-none text-[12px] font-medium text-[var(--text-normal)] cursor-pointer pr-4 focus:outline-none font-sans"
+                                >
+                                    <option value="deepseek-reasoner">Deepseek R1</option>
+                                    <option value="deepseek-chat">Deepseek V3</option>
+                                </select>
+                                <div class="absolute right-2.5 pointer-events-none text-[var(--text-muted)]">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M6 9l6 6 6-6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Send Button -->
                         <button 
-                            class="submit-button" 
+                            class="h-8 px-4 bg-apple-blue text-white border-none rounded-full cursor-pointer text-[13px] font-semibold transition-all duration-200 flex items-center justify-center shadow-sm hover:bg-blue-600 hover:shadow-md active:scale-95 disabled:bg-[var(--background-modifier-border)] disabled:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:shadow-none disabled:active:scale-100" 
                             @click="submit"
-                            :disabled="isLoading"
+                            :disabled="isLoading || !inputContent.trim()"
                         >
-                            <span v-if="!isLoading">发送</span>
-                            <span v-else class="loading-dots">处理中...</span>
+                            <span v-if="!isLoading" class="flex items-center gap-1">
+                                Send
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </span>
+                            <span v-else class="flex items-center gap-2">
+                                <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Thinking
+                            </span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="answer-section">
-            <div class="answer-field"></div>
-        </div>
     </div>
 </template>
 <script setup lang="ts">
-import { ref, computed , watch} from 'vue';
+import { ref, computed , watch, nextTick} from 'vue';
 import { OpenAI } from 'openai';
-import {MarkdownRenderer} from 'obsidian';
+import {MarkdownRenderer, Notice} from 'obsidian';
 import {usePromptStore} from '../store/prompts'
-import { ElMessage } from 'element-plus'
+import ThinkingClue from './ThinkingClue.vue'
 
 const props = defineProps<{
     plugin: any
 }>();
 
-let inputContent = ref('');
-let isLoading = ref(false);
+const inputContent = ref('');
+const isLoading = ref(false);
+const isThinking = ref(false);
+const hasResponse = ref(false);
 const promptStore = usePromptStore()
-var chatModel = ref('deepseek-reasoner')
+const chatModel = ref('deepseek-reasoner')
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
+const answerContainerRef = ref<HTMLElement | null>(null);
 
-let historyAnswer = computed(()=>{
-    return promptStore.historyCard
+const historyItem = computed(() => promptStore.historyCard)
+const historyAnswer = computed(()=>{
+    return historyItem.value?.answer || ''
 })
 
+const adjustHeight = () => {
+    const textarea = textareaRef.value;
+    if (textarea) {
+        // 使用 requestAnimationFrame 避免 ResizeObserver loop 错误
+        window.requestAnimationFrame(() => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+    }
+}
+
+watch(inputContent, () => {
+    nextTick(adjustHeight);
+});
+answerContainerRef.value;
 watch(historyAnswer,async ()=>{
-    // console.log('监听到historyAnswer改变')
+    // console.log('监听answerContainerRef.value;
     const container = document.querySelector('.answer-field') as HTMLElement
-    container.empty();
-    await MarkdownRenderer.render(
+    if(container && historyAnswer.value) {
+        container.empty();
+        await MarkdownRenderer.render(
                 props.plugin.app,
                 historyAnswer.value,
                 container,
                 '/',
                 props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
         );
+    }
     // console.log('watch', historyAnswer.value)
 })
 
 
 const handleCommand = (command: string | number | object) => {
-  ElMessage(`click on item ${command}`)
+  new Notice(`click on item ${command}`)
 }
 
 const submit = async () => {
-    const container = document.querySelector('.answer-field') as HTMLElement;
-    container.empty();
+    const container = answerContainerRef.value;
+    if(container) container.empty();
     isLoading.value = true;  // 开始加载
+    isThinking.value = true;
+    hasResponse.value = false;
 
     try {
         const openai = new OpenAI({
@@ -81,182 +148,81 @@ const submit = async () => {
             dangerouslyAllowBrowser: true
         });
 
+        let fullResponse = '';
         const completion = await openai.chat.completions.create({
             messages: [
                 {role: "system", content:'你是一个AI助手，请根据用户的问题给出回答'},
                 {role: "user", content: inputContent.value}
             ],
             model: chatModel.value,
-            stream: false
+            stream: true
         });
 
-        const response = completion.choices[0].message.content;
-        if (response) {
-            await MarkdownRenderer.render(
-                props.plugin.app,
-                response,
-                container,
-                '/',
-                props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
-            );
+        // 处理流式响应
+        for await (const chunk of completion) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+                if (isThinking.value) {
+                    isThinking.value = false;
+                }
+                fullResponse += content;
+                // 实时渲染 Markdown 内容
+                if(container) {
+                    container.empty();
+                    await MarkdownRenderer.render(
+                        props.plugin.app,
+                        fullResponse,
+                        container,
+                        '/',
+                        props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
+                    );
+                }
+            }
+        }
 
+        if (fullResponse) {
             // 保存对话到 store
-            promptStore.addPrompt(inputContent.value, response)
+            promptStore.addPrompt(inputContent.value, fullResponse)
             // 清空输入框
             inputContent.value = '';
+            hasResponse.value = true;
         }
     } catch (error: any) {
+        isThinking.value = false;
         // console.log('---Error:', error);
-        await MarkdownRenderer.render(
+        if(container) {
+            await MarkdownRenderer.render(
                 props.plugin.app,
                 error.message,
                 container,
                 '/',
                 props.plugin.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0].view
             );
+        }
     } finally {
         isLoading.value = false;  // 结束加载
+        isThinking.value = false;
     }
 }
 </script>
 
 <style scoped>
-.ai-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;  /* 使用全部可用高度 */
-    padding: 20px;
-}
-
-.input-section {
-    margin-bottom: 20px;
-}
-
-.input-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.textarea-container {
-    position: relative;
-    width: 100%;
-}
-
-.input-field {
-    width: 100%;
-    padding: 8px 12px;
-    padding-bottom: 40px; /* 为按钮留出空间 */
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 6px;
-    resize: vertical;
-    font-size: 14px;
-    background: var(--background-primary);
-    color: var(--text-normal);
-    min-height: 100px;
-}
-
-.button-container {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-} 
-
-
-
-.submit-button, .model-select {
-    height: 28px;
-    padding: 0 12px;
-    background-color: var(--interactive-normal);
-    color: var(--text-normal);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s ease;
-    min-width: 50px;
-    opacity: 0.8;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.submit-button:hover, .model-select:hover {
-    opacity: 1;
-    background-color: var(--interactive-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-.submit-button:active {
-    transform: translateY(0);
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-}
-
-.submit-button:disabled {
-    background-color: var(--interactive-normal);
-    opacity: 0.5;
-    cursor: wait;
-    transform: none;
-    box-shadow: none;
-}
-
-.loading-dots {
-    color: var(--text-muted);
-}
-
-.answer-section {
-    flex: 1;  /* 占用剩余空间 */
-    overflow: hidden;  /* 防止溢出 */
-    position: relative;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 8px;
-    background: var(--background-primary-alt);
-    margin-bottom: 20px;
-}
-
-.answer-field {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: auto;
-    padding: 16px;
-    user-select: text;  /* 允许文本选择 */
-    cursor: text;       /* 显示文本选择光标 */
-    -webkit-user-select: text; /* 兼容 Webkit 浏览器 */
-    -moz-user-select: text;    /* 兼容 Firefox */
-    -ms-user-select: text;     /* 兼容 IE/Edge */
-}
-
 /* 确保 Markdown 内容也可以选择 */
 .answer-field :deep(*) {
     user-select: text;
     -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
 }
 
-/* 自定义滚动条样式 */
+/* 滚动条样式 */
 .answer-field::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
-
 .answer-field::-webkit-scrollbar-track {
-    background: var(--background-primary);
+    background: transparent;
 }
-
 .answer-field::-webkit-scrollbar-thumb {
-    background-color: var(--background-modifier-border);
-    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
 }
 </style>
 

@@ -1,4 +1,5 @@
-import { Plugin, WorkspaceLeaf, Notice } from "obsidian";
+import { Plugin, WorkspaceLeaf, Notice, ObsidianProtocolData } from "obsidian";
+import "./tailwind.css";
 import { DeepSeekAIAssistant_SettingTab } from "./setting-tab";
 import {SettingsInterfaceType, DEFAULT_SETTINGS} from './settings'  // 导入设置接口类型
 import { DeepSeekAIAssistant_ItemView } from "./my-itemview";
@@ -15,9 +16,31 @@ export default class Plugin_Deepseek_AI_Assistant extends Plugin {
         this.addRibbonIcon("bot", "Open deepseek AI assistant", () => {
             this.activateView();
         });
+
+        this.addCommand({
+            id: 'open-deepseek-ai-assistant',
+            name: 'Open deepseek AI assistant',
+            callback: () => {
+                this.activateView();
+            }
+        });
+
+        this.registerObsidianProtocolHandler("deepseek-ai-assistant", async (params: ObsidianProtocolData) => {
+            if (params.action === "deepseek-ai-assistant" && params.id) {
+                this.handleOpenChat(params.id);
+            }
+        });
         
     }
     onunload() {
+    }
+
+    async handleOpenChat(id: string) {
+        await this.activateView();
+        const leaf = this.app.workspace.getLeavesOfType("deepseek-ai-assistant-itemview")[0];
+        if (leaf && leaf.view instanceof DeepSeekAIAssistant_ItemView) {
+            leaf.view.openChat(id);
+        }
     }
 
     async loadSettings(){

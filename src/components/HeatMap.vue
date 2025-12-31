@@ -6,36 +6,77 @@ import { usePromptStore } from '../store/prompts'
 const promptStore = usePromptStore()
 const pixel_width = ref(12)
 const svg_left_or_right_margin = ref(10)
+const svg_top_bottom_margin = ref(10)
 const pixel_margin = ref(5) // rect与右边的rect之间的间隔
 var rect_count_x = ref(0)
-// const promptStats = promptStore.promptStats // 不要另外再单独赋值！这样用，监听不到响应式变化
+const scrollContainer = ref(null)
+const isDragging = ref(false)
+let startX
+let scrollLeft
 
 const observer = new ResizeObserver(entries =>{
     for(let entry of entries){
         var newWidth = entry.contentRect.width
-        // console.log(`新宽度：${newWidth}px`)
-        // 随着svg宽度的拖拽，计算新宽度里，一行可以放多少个rect
-        rect_count_x.value = Math.floor((newWidth - svg_left_or_right_margin.value * 2 - pixel_margin.value) / (pixel_width.value + pixel_margin.value))
-        // console.log(`${rect_count_x}`)
+        const min_margin = 10
+        const col_width = pixel_width.value + pixel_margin.value
+        
+        // Calculate how many columns fit
+        const fitCount = Math.floor((newWidth - 2 * min_margin + pixel_margin.value) / col_width)
+        
+        // We want at least 53 weeks (1 year) to be available for scrolling
+        // but if the sidebar is wider than 53 weeks, we show more to fill it.
+        rect_count_x.value = Math.max(53, fitCount)
+        
+        // If it fits exactly or is smaller than 53, we don't need to center it with large margins
+        // because it will be scrollable.
+        if (rect_count_x.value > fitCount) {
+            svg_left_or_right_margin.value = 10 // Fixed small margin when scrollable
+        } else {
+            // Center it if it fits within the width
+            const used_width = rect_count_x.value * col_width - pixel_margin.value
+            svg_left_or_right_margin.value = (newWidth - used_width) / 2
+        }
     }
 })
 
-// 监听rect_count_x的变化
-watch(rect_count_x,(newValue, oldValue)=>{
-    // console.log(`一行里面的rect的个数是${newValue}`)
-    draw_svg() // 根据这个rect_count_x，重新绘制svg
+const startDragging = (e) => {
+    isDragging.value = true
+    startX = e.pageX - scrollContainer.value.offsetLeft
+    scrollLeft = scrollContainer.value.scrollLeft
+}
+
+const stopDragging = () => {
+    isDragging.value = false
+}
+
+const doDragging = (e) => {
+    if (!isDragging.value) return
+    e.preventDefault()
+    const x = e.pageX - scrollContainer.value.offsetLeft
+    const walk = (x - startX) * 1.5 // scroll speed
+    scrollContainer.value.scrollLeft = scrollLeft - walk
+}
+
+// 监听变化
+watch([rect_count_x, svg_left_or_right_margin],()=>{
+    draw_svg() 
 })
 
 onMounted(async ()=>{
     // console.log('这里是onMounted钩子')
     await nextTick() // 等待DOM更新完成
-    observer.observe(document.getElementById('svg_container'))
+    if (scrollContainer.value) {
+        observer.observe(scrollContainer.value)
+    }
     draw_svg();
 })
 
 const draw_svg = async ()=>{
     await nextTick() // 等待DOM更新完成
     d3.select('#svg_container').selectAll('rect').remove()
+    d3.select('#svg_container').selectAll('text').remove()
+    
+    const month_label_height = 20
     // 日期方块的个数应该是： rect_count_x * 7
     // svg中的日期方块的渲染布局应该是先纵向布局，再横向布局。纵向布局7个日期方块，再横向布局
     // 要从jsonData中读取对应个数的日期方, 从当前日期往前推 rect_count_x * 7 个日期方块
@@ -57,43 +98,102 @@ const draw_svg = async ()=>{
     }
     // console.log(date_list)
 
+    const col_width = pixel_width.value + pixel_margin.value
+    const total_width = rect_count_x.value * col_width - pixel_margin.value + 2 * svg_left_or_right_margin.value
+    d3.select('#svg_container').attr('width', total_width)
+
+    // Add month labels
+    const month_labels = []
+    let last_month = -1
+    let last_year = -1
+    date_list.forEach((d, i) => {
+        const date = new Date(d.date)
+        const month = date.getMonth()
+        const year = date.getFullYear()
+        
+        if (month !== last_month || year !== last_year) {
+            const col = Math.floor(i / 7)
+            // Only add if it's not too close to the previous label (at least 3 columns apart)
+            if (month_labels.length === 0 || col - month_labels[month_labels.length-1].col >= 3) {
+                month_labels.push({
+                    name: date.toLocaleString('en-US', { month: 'short' }),
+                    year: year,
+                    col: col
+                })
+            }
+            last_month = month
+            last_year = year
+        }
+    })
+
+    // Finalize label names: show year on first, last, and when year changes
+    month_labels.forEach((label, idx) => {
+        const isFirst = idx === 0
+        const isLast = idx === month_labels.length - 1
+        const yearChanged = !isFirst && label.year !== month_labels[idx-1].year
+        
+        if (isFirst || isLast || yearChanged) {
+            label.name = `${label.year}/${label.name}`
+        }
+    })
+
+    d3.select('#svg_container').selectAll('text.month-label')
+        .data(month_labels)
+        .enter()
+        .append('text')
+        .attr('class', 'month-label')
+        .attr('x', d => svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * d.col)
+        .attr('y', svg_top_bottom_margin.value + 10)
+        .attr('font-size', '10px')
+        .attr('font-family', 'var(--apple-font)')
+        .attr('fill', 'var(--text-muted)')
+        .text(d => d.name)
     
     d3.select('#svg_container').selectAll('rect').data(date_list)
      .enter().append('rect')
       .attr('width', pixel_width.value)
       .attr('height', pixel_width.value)
-      .attr('fill','#4A90E2')
+      .attr('rx', 3) // 圆角
+      .attr('ry', 3)
       .attr('x',(d,i)=>{
         const col = Math.floor(i / 7) // 计算当前rect是第几列
         return svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * (col)    
       })
       .attr('y',(d,i)=>{
         const row = i % 7 // 计算当前rect是第几行
-        return svg_left_or_right_margin.value + (pixel_width.value + pixel_margin.value) * (row)    
+        return svg_top_bottom_margin.value + month_label_height + (pixel_width.value + pixel_margin.value) * (row)    
       })
       .attr('fill', v => {
         if (v.prompts_num == 0) {
-            return '#EFEFEF'  // 表示无数据
+            return 'var(--apple-bg-secondary)'  // 使用 CSS 变量适配深色模式
         }
 
         if (v.prompts_num > 14) {
-            return '#2C82C9'  // 深蓝色，表示多条数据
+            return 'var(--apple-blue)'  // 深蓝色
         }
         if(v.prompts_num >9){
-            return '#4A90E2'
+            return 'rgba(0, 122, 255, 0.8)'
         }
         if(v.prompts_num >4){
-            return '#7CB9E8'
+            return 'rgba(0, 122, 255, 0.6)'
         }
-        return '#A7C7E7'  // 浅蓝色，表示一条数据
+        return 'rgba(0, 122, 255, 0.4)'  // 浅蓝色
         })
      .on('click', (e,v)=>handleClick(e,v))
+     .style('cursor', 'pointer') // 添加鼠标手势
      .append('title') // 添加悬浮提示
       .text(d => `${d.date}: ${d.prompts_num} prompts`)
     
     // 计算并设置SVG的实际高度
-    const svgHeight = svg_left_or_right_margin.value * 2 + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
+    const svgHeight = svg_top_bottom_margin.value * 2 + month_label_height + (pixel_width.value + pixel_margin.value) * 7 - pixel_margin.value
     d3.select('#svg_container').attr('height', svgHeight)
+
+    // 绘制完成后，如果是初始化或宽度增加，滚动到最右侧（显示最新日期）
+    nextTick(() => {
+        if (scrollContainer.value && !isDragging.value) {
+            scrollContainer.value.scrollLeft = scrollContainer.value.scrollWidth
+        }
+    })
 }
 
 const handleClick = (e,v)=>{
@@ -112,21 +212,26 @@ watch(() => promptStore.promptStats, async () => {
 </script>
 
 <template>
-    <div id="container">
-        <svg id="svg_container"></svg>
+    <div id="container" class="w-full overflow-hidden">
+        <div 
+            ref="scrollContainer"
+            class="bg-[var(--background-secondary)] overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing select-none"
+            @mousedown="startDragging"
+            @mousemove="doDragging"
+            @mouseup="stopDragging"
+            @mouseleave="stopDragging"
+        >
+            <svg id="svg_container" class="h-auto block"></svg>
+        </div>
     </div> 
 </template>
 
 <style scoped>
-#container {
-    height: fit-content;
-    overflow: hidden;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
-
-svg{
-    width: 100%;
-    height: auto;
-    margin: 0 10px 3px 10px; /* 上右下左 */
-    display: block; /* 消除inline元素的底部空隙 */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 </style>

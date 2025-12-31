@@ -1,38 +1,76 @@
 <template>
-    <el-container>
-        <el-aside>
-            <DataPanel :plugin="plugin"/>
-            <HeatMap/>
-            <!-- <ThinkingClue/>
-            <WordCloud/> -->
-            <PromptLine :plugin="plugin"/>
-        </el-aside>
-        <el-main>
-            <!-- 拖拽手柄移到这里 -->
+    <div class="absolute inset-0 flex w-full h-full overflow-hidden bg-[var(--background-primary)] text-[var(--text-normal)]">
+        <!-- 侧边栏 -->
+        <div 
+            v-show="isSidebarOpen"
+            class="relative flex flex-col flex-none h-full bg-[var(--background-secondary)] border-r border-[var(--apple-border)]"
+            :style="{ width: asideWidth + 'px', flexDirection: 'column' }"
+        >
+            <!-- Header/Dashboard 区域：固定高度，带底部分割线 -->
+            <div class="flex-none w-full border-b border-[var(--apple-border)] pb-0">
+                <DataPanel :plugin="plugin"/>
+                <HeatMap/>
+            </div>
+            
+            <!-- List 区域：自适应高度，独立滚动 -->
+            <div class="flex-1 w-full min-h-0 overflow-hidden">
+                <PromptLine :plugin="plugin"/>
+            </div>
+            
+            <!-- Footer 区域 (可选)：如设置按钮等，固定在底部 -->
+            <!-- <div class="flex-none p-3 border-t border-[var(--apple-border)]">
+                <button>Settings</button>
+            </div> -->
+            
+            <!-- 拖拽手柄 -->
             <div 
-                class="drag-handle"
+                class="absolute right-0 top-0 w-[6px] h-full cursor-col-resize z-50 hover:bg-apple-blue/10 active:bg-apple-blue/20 transition-colors duration-200 flex justify-end group"
                 @mousedown.prevent="startDrag"
-            ></div>
+            >
+                <div class="w-[2px] h-full bg-transparent group-hover:bg-apple-blue group-active:bg-apple-blue transition-colors duration-200"></div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 h-full overflow-hidden relative bg-[var(--background-secondary)]">
+            <!-- Sidebar Toggle Button -->
+            <button 
+                @click="toggleSidebar"
+                class="absolute top-3 left-3 z-20 p-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--background-modifier-hover)] hover:text-[var(--text-normal)] transition-colors"
+                :title="isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+            </button>
             <AICard :plugin="plugin"/>
-        </el-main>
-    </el-container>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import AICard from "./AICard.vue";
 import HeatMap from "./HeatMap.vue";
 import DataPanel from "./DataPanel.vue";
-// import ThinkingClue from "./ThinkingClue.vue";
-// import WordCloud from "./WordCloud.vue";
 import PromptLine from "./PromptLine.vue";
 import { ref, onUnmounted } from 'vue';
+import { usePluginStore } from "../store/plugin";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
     plugin: any
 }>();
 
+const pluginStore = usePluginStore();
+const { isSidebarOpen } = storeToRefs(pluginStore);
+
+const toggleSidebar = () => {
+    pluginStore.toggleSidebar();
+};
+
 // 侧边栏宽度控制
-const asideWidth = ref(220);
+const asideWidth = ref(260); // 默认宽度稍微调大一点
 const isDragging = ref(false);
 let startX = 0;
 let startWidth = 0;
@@ -42,6 +80,7 @@ const startDrag = (e: MouseEvent) => {
   isDragging.value = true;
   startX = e.clientX;
   startWidth = asideWidth.value;
+  document.body.style.cursor = 'col-resize'; // 强制全局鼠标样式
 
   // 全局事件监听
   window.addEventListener('mousemove', handleDrag);
@@ -55,13 +94,14 @@ const handleDrag = (e: MouseEvent) => {
   const delta = e.clientX - startX;
   const newWidth = startWidth + delta;
   
-  // 限制最小宽度
-  asideWidth.value = Math.max(150, Math.min(newWidth, 400)); 
+  // 限制最小宽度和最大宽度
+  asideWidth.value = Math.max(200, Math.min(newWidth, 600)); 
 };
 
 // 停止拖拽
 const stopDrag = () => {
   isDragging.value = false;
+  document.body.style.cursor = ''; // 恢复鼠标样式
 
   // 清理事件
   window.removeEventListener('mousemove', handleDrag);
@@ -72,68 +112,8 @@ const stopDrag = () => {
 onUnmounted(() => {
   window.removeEventListener('mousemove', handleDrag);
   window.removeEventListener('mouseup', stopDrag);
+  document.body.style.cursor = '';
 });
 
 </script>
 
-<style scoped>
-.el-container {
-    width: 100%;
-    height: 100%;
-}
-
-.el-aside {
-    position: relative;
-    width: v-bind(asideWidth + 'px');
-    transition: width 0.1s;
-    overflow-x: hidden;
-    overflow-y: scroll; /* 确保可以滚动 */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-/* Webkit浏览器（Chrome、Safari等）隐藏滚动条 */
-.el-aside::-webkit-scrollbar {
-    display: none;
-}
-
-.el-main {
-    position: relative;
-    padding-left: 2px !important; /* 减小左侧padding */
-}
-
-.el-aside, .el-main {
-    overflow-y: auto;
-}
-
-/* 拖拽手柄样式 */
-.drag-handle {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 2px; /* 减小手柄宽度 */
-    height: 100%;
-    background: #dcdfe6;
-    cursor: col-resize;
-    transition: all 0.1s;
-}
-
-.drag-handle:hover, 
-.drag-handle:active {
-    width: 4px; /* 悬停和拖拽时稍微增加宽度，提供更好的视觉反馈 */
-    background: #409eff;
-}
-
-.drag-handle:active {
-    background: #337ecc;
-}
-
-/* 覆盖 Element Plus 默认样式 */
-:deep(.el-aside) {
-    flex: 0 0 auto !important; /* 禁用默认 flex 行为 */
-}
-
-:deep(.el-main) {
-    padding: 0 !important; /* 移除默认 padding */
-}
-</style>
