@@ -2,16 +2,16 @@
 
 [中文](#中文) | [English](#english)
 
-<div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
-</div>
-
 ---
 
 ## 中文
 
 ### 概述
 DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知识积累的工具。它旨在帮助用户记录提问过程，将零散的 AI 对话转化为可追溯的知识资产。
+
+<div align="center">
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
+</div>
 
 ### 主要功能
 
@@ -51,23 +51,27 @@ DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知�
 </div>
 
 ---
+
+## English
+
+### Overview
+DeepSeek AI Assistant is a tool designed to help Obsidian users manage prompts and accumulate knowledge. It aims to assist users in recording their inquiry process, transforming scattered AI conversations into traceable knowledge assets.
+
 <div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="700px" alt="DeepSeek AI Assistant Demo"/>
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
 </div>
 
-
-
 ### Features
+
+<div align="center">
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="500px" alt="DeepSeek AI Assistant Demo"/>
+</div>
 
 #### Prompts Management & Search: Building Your Knowledge Assets
 The plugin is more than just a logger; it's a repository for your thoughts. With powerful **keyword filtering**, you can instantly retrieve past inspirations or complex solutions from hundreds of historical records. This "instant reuse" capability transforms every prompt from a one-time interaction into a **digital asset** that can be invoked at any time within your personal knowledge base.
 
 #### Timeline View
-The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth
-The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth
-
-#### Prompts Management & Search
-The plugin automatically records your inquiry history. With the keyword search feature, you can easily find past conversation records, avoiding redundant questions and improving knowledge reuse.
+The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth.
 
 #### Traceability & Links
 Supports generating dedicated links for each prompt. You can save links in your notes using the `[Question Description](obsidian://deepseek-ai-assistant?id=...)` format. While organizing notes, click the link to trace back to the AI's response at that time.
