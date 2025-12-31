@@ -2,6 +2,10 @@
 
 [中文](#中文) | [English](#english)
 
+<div align="center">
+    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="800px" alt="DeepSeek AI Assistant Interface"/>
+</div>
+
 ---
 
 ## 中文
@@ -26,7 +30,7 @@ DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知�
 #### 基础对话支持
 集成 DeepSeek V3 与 R1 模型，支持流式输出，提供基础的 Markdown 渲染，方便将内容复制到笔记中。
 
-### 配置说明
+### 配置和使用说明
 1. 在插件设置中填入您的 [DeepSeek API Key](https://platform.deepseek.com)。
 2. 确保您的账户中有足够的 Token 余额。
 3. 通过侧边栏图标或命令面板 "Open deepseek-ai-assistant" 打开界面。
@@ -44,14 +48,14 @@ DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知�
 
 ---
 
-## English
 
-### Overview
-DeepSeek AI Assistant is a tool designed to help Obsidian users manage prompts and accumulate knowledge. It aims to assist users in recording their inquiry process, transforming scattered AI conversations into traceable knowledge assets.
-: Building Your Knowledge Assets
+### Features
+
+#### Prompts Management & Search: Building Your Knowledge Assets
 The plugin is more than just a logger; it's a repository for your thoughts. With powerful **keyword filtering**, you can instantly retrieve past inspirations or complex solutions from hundreds of historical records. This "instant reuse" capability transforms every prompt from a one-time interaction into a **digital asset** that can be invoked at any time within your personal knowledge base.
 
 #### Timeline View
+The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth
 The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth
 
 #### Prompts Management & Search
