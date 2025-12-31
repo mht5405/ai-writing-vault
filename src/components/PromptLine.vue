@@ -11,15 +11,15 @@
         <div v-else 
           class="flex-1 flex items-center bg-[var(--background-modifier-form-field)] rounded-md px-2 py-1 mr-2 animate-in fade-in slide-in-from-right-2 duration-200 transition-all"
           :style="{
-            border: isInputFocused ? '1px solid var(--interactive-accent)' : '1px solid var(--background-modifier-border)',
-            boxShadow: isInputFocused ? '0 0 0 1px var(--interactive-accent)' : 'none'
+            border: isInputFocused ? '1px solid #007AFF' : '1px solid var(--background-modifier-border)',
+            boxShadow: isInputFocused ? '0 0 0 1px #007AFF' : 'none'
           }"
         >
           <input 
             ref="searchInputRef"
             v-model="searchQuery"
             type="text"
-            class="w-full bg-transparent border-none p-0 text-sm text-[var(--text-normal)] placeholder-[var(--text-muted)] focus:outline-none"
+            class="w-full bg-transparent border-none p-0 text-sm text-[var(--text-normal)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-0"
             placeholder="Search prompts..."
             @keydown.esc="closeSearch"
             @blur="handleBlur"
@@ -49,25 +49,26 @@
     <!-- Content (Scrollable) -->
     <div class="flex-1 overflow-y-auto px-4 pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-black/10 dark:scrollbar-thumb-white/10">
       <div class="pl-2">
-        <div class="relative border-l-2 border-[var(--background-modifier-border)] ml-1.5 space-y-6 pb-2">
+        <!-- Timeline Container -->
+        <div class="relative border-l-2 border-apple-blue/20 ml-2 space-y-6 pb-2">
           <div v-if="sortedPromptContent.length === 0" class="pl-6 text-sm text-[var(--text-muted)] italic">
             No prompts found.
           </div>
           <div 
             v-for="item in sortedPromptContent"
             :key="item.id_timestamp"
-            class="relative pl-6"
+            class="relative pl-6 group"
           >
             <!-- Timeline Dot -->
-            <div class="absolute -left-[7px] top-3 w-[12px] h-[12px] rounded-full bg-apple-blue border-2 border-[var(--background-primary)] shadow-[0_0_0_2px_rgba(0,122,255,0.2)]"></div>
+            <div class="absolute -left-[6.5px] top-3 w-[11px] h-[11px] rounded-full bg-[var(--background-primary)] border-2 border-apple-blue group-hover:bg-apple-blue transition-all duration-200 z-10 -translate-x-[1px]"></div>
             
             <!-- Timestamp -->
-            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none">
+            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none group-hover:text-apple-blue transition-colors duration-200">
               {{ formatTime(item.id_timestamp) }}
             </div>
 
             <!-- Card -->
-            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--apple-border)] select-text hover:bg-[var(--apple-bg-secondary)] hover:translate-x-1 hover:shadow-sm hover:border-transparent" @click="clickItem(item)">
+            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--background-modifier-border)] select-text group-hover:border-apple-blue group-hover:shadow-sm" @click="clickItem(item)">
               <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
             </div>
           </div>
