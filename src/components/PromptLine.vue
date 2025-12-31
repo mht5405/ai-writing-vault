@@ -1,85 +1,87 @@
 <template>
-  <div class="px-4 pt-2 pb-4 bg-transparent h-full overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-black/10 dark:scrollbar-thumb-white/10" @click="clearSelection">
+  <div class="flex flex-col h-full bg-transparent overflow-hidden" @click="clearSelection">
     
-    <!-- Header with Date and Search -->
-    <div class="flex items-center justify-between mb-5 ml-1 h-8">
-      <!-- Date Title -->
-      <h3 v-if="!isSearchActive" class="font-sans text-xl font-bold text-[var(--text-normal)] select-none truncate">{{ selectedDate }}</h3>
-      
-      <!-- Search Input -->
-      <div v-else class="flex-1 flex items-center bg-[var(--background-modifier-form-field)] rounded-md border border-[var(--background-modifier-border)] px-2 py-1 mr-2 animate-in fade-in slide-in-from-right-2 duration-200 focus-within:border-[var(--interactive-accent)] focus-within:ring-1 focus-within:ring-[var(--interactive-accent)] transition-all">
-        <input 
-          ref="searchInputRef"
-          v-model="searchQuery"
-          type="text"
-          class="w-full bg-transparent border-none p-0 text-sm text-[var(--text-normal)] placeholder-[var(--text-muted)] focus:outline-none"
-          placeholder="Search prompts..."
-          @keydown.esc="closeSearch"
-          @blur="handleBlur"
-        />
-        <button 
-          v-if="searchQuery" 
-          @click="searchQuery = ''" 
-          class="ml-1 p-0.5 rounded-full text-[var(--text-muted)] hover:text-[var(--text-normal)] hover:bg-[var(--background-modifier-hover)] transition-colors flex-shrink-0"
-          title="Clear search"
+    <!-- Header with Date and Search (Fixed) -->
+    <div class="flex-none px-4 pt-2 pb-2">
+      <div class="flex items-center justify-between h-8">
+        <!-- Date Title -->
+        <h3 v-if="!isSearchActive" class="font-sans text-xl font-bold text-[var(--text-normal)] select-none truncate ml-1">{{ selectedDate }}</h3>
+        
+        <!-- Search Input -->
+        <div v-else 
+          class="flex-1 flex items-center bg-[var(--background-modifier-form-field)] rounded-md px-2 py-1 mr-2 animate-in fade-in slide-in-from-right-2 duration-200 transition-all"
+          :style="{
+            border: isInputFocused ? '1px solid var(--interactive-accent)' : '1px solid var(--background-modifier-border)',
+            boxShadow: isInputFocused ? '0 0 0 1px var(--interactive-accent)' : 'none'
+          }"
         >
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <input 
+            ref="searchInputRef"
+            v-model="searchQuery"
+            type="text"
+            class="w-full bg-transparent border-none p-0 text-sm text-[var(--text-normal)] placeholder-[var(--text-muted)] focus:outline-none"
+            placeholder="Search prompts..."
+            @keydown.esc="closeSearch"
+            @blur="handleBlur"
+            @focus="isInputFocused = true"
+          />
+        </div>
+
+        <!-- Search Toggle Button -->
+        <button 
+          @click="toggleSearch"
+          class="p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-normal)] hover:bg-[var(--background-modifier-hover)] transition-colors"
+          :class="{'bg-[var(--background-modifier-hover)] text-[var(--text-normal)]': isSearchActive}"
+          title="Search"
+        >
+          <svg v-if="!isSearchActive" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-
-      <!-- Search Toggle Button -->
-      <button 
-        @click="toggleSearch"
-        class="p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-normal)] hover:bg-[var(--background-modifier-hover)] transition-colors"
-        :class="{'bg-[var(--background-modifier-hover)] text-[var(--text-normal)]': isSearchActive}"
-        title="Search"
-      >
-        <svg v-if="!isSearchActive" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
     </div>
     
-    <div class="pl-2">
-      <div class="relative border-l-2 border-[var(--background-modifier-border)] ml-1.5 space-y-6 pb-2">
-        <div v-if="sortedPromptContent.length === 0" class="pl-6 text-sm text-[var(--text-muted)] italic">
-          No prompts found.
-        </div>
-        <div 
-          v-for="item in sortedPromptContent"
-          :key="item.id_timestamp"
-          class="relative pl-6"
-        >
-          <!-- Timeline Dot -->
-          <div class="absolute -left-[7px] top-3 w-[12px] h-[12px] rounded-full bg-apple-blue border-2 border-[var(--background-primary)] shadow-[0_0_0_2px_rgba(0,122,255,0.2)]"></div>
-          
-          <!-- Timestamp -->
-          <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none">
-            {{ formatTime(item.id_timestamp) }}
+    <!-- Content (Scrollable) -->
+    <div class="flex-1 overflow-y-auto px-4 pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-black/10 dark:scrollbar-thumb-white/10">
+      <div class="pl-2">
+        <div class="relative border-l-2 border-[var(--background-modifier-border)] ml-1.5 space-y-6 pb-2">
+          <div v-if="sortedPromptContent.length === 0" class="pl-6 text-sm text-[var(--text-muted)] italic">
+            No prompts found.
           </div>
+          <div 
+            v-for="item in sortedPromptContent"
+            :key="item.id_timestamp"
+            class="relative pl-6"
+          >
+            <!-- Timeline Dot -->
+            <div class="absolute -left-[7px] top-3 w-[12px] h-[12px] rounded-full bg-apple-blue border-2 border-[var(--background-primary)] shadow-[0_0_0_2px_rgba(0,122,255,0.2)]"></div>
+            
+            <!-- Timestamp -->
+            <div class="font-sans text-xs text-[var(--text-muted)] mb-2 select-none">
+              {{ formatTime(item.id_timestamp) }}
+            </div>
 
-          <!-- Card -->
-          <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--apple-border)] select-text hover:bg-[var(--apple-bg-secondary)] hover:translate-x-1 hover:shadow-sm hover:border-transparent" @click="clickItem(item)">
-            <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
+            <!-- Card -->
+            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--apple-border)] select-text hover:bg-[var(--apple-bg-secondary)] hover:translate-x-1 hover:shadow-sm hover:border-transparent" @click="clickItem(item)">
+              <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>     
+      </div>     
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, onMounted } from 'vue';
 import {usePromptStore} from '../store/prompts'
 
+const isInputFocused = ref(false);
 const promptStore = usePromptStore()
 
 
@@ -90,6 +92,13 @@ const props = defineProps<{
 const isSearchActive = ref(false);
 const searchQuery = ref('');
 const searchInputRef = ref<HTMLInputElement | null>(null);
+
+// Automatically focus the search input when the component is mounted
+onMounted(() => {
+  if (searchInputRef.value) {
+    searchInputRef.value.focus();
+  }
+});
 
 const selectedDate = computed(()=>{
   // console.log(promptStore.selectedDate)
@@ -154,9 +163,11 @@ const toggleSearch = () => {
 const closeSearch = () => {
   isSearchActive.value = false;
   searchQuery.value = '';
+  isInputFocused.value = false;
 }
 
 const handleBlur = () => {
+  isInputFocused.value = false;
   // 如果没有输入内容，失去焦点时自动关闭
   if (!searchQuery.value) {
     isSearchActive.value = false;
