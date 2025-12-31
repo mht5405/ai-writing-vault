@@ -85,8 +85,8 @@
             </div>
 
             <!-- Card -->
-            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-200 border border-[var(--background-modifier-border)] select-text group-hover:border-apple-blue group-hover:shadow-sm group-active:border-apple-blue group-active:shadow-md" @click="clickItem(item)">
-              <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 overflow-hidden select-text">{{item.prompt}}</div>
+            <div class="prompt-content bg-[var(--background-primary)] rounded-lg p-3 cursor-pointer transition-all duration-300 border border-[var(--background-modifier-border)] select-text group-hover:border-apple-blue group-hover:shadow-md group-active:border-apple-blue group-active:shadow-lg relative" @click="clickItem(item)">
+              <div class="font-sans text-[13px] leading-relaxed text-[var(--text-normal)] line-clamp-3 group-hover:line-clamp-none overflow-hidden select-text transition-all duration-300">{{item.prompt}}</div>
             </div>
           </div>
         </div>
