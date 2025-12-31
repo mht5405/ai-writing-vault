@@ -237,7 +237,7 @@ const copyLink = (item: any) => {
     }
     const link = `[${linkText}](obsidian://deepseek-ai-assistant?id=${item.id_timestamp} "Open plugin:deepseek-ai-assistant")`;
     navigator.clipboard.writeText(link);
-    new Notice('Link copied to clipboard!');
+    new Notice('Chat link copied to clipboard!');
 }
 
 // 添加清除选中文本的函数
