@@ -474,6 +474,12 @@ watch(modelQuery, (value) => {
         modelFilterQuery.value = value;
     }, 150);
 });
+
+watch(() => promptStore.focusedMessageId, async (value) => {
+    if (!value) return;
+    await nextTick();
+    scrollToFocusedMessage();
+});
 watch(historyAnswer, async () => {
     if (isLoading.value) return;
     if (historyAnswer.value) {
