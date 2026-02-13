@@ -1,25 +1,25 @@
 import { getIcon, ItemView, WorkspaceLeaf } from "obsidian";
-import Plugin_Deepseek_AI_Assistant from "./main";
+import Plugin_AI_Writing_Vault from "./main";
 import { createApp } from "vue";
 import MainTemplate from "./components/MainTemplate.vue";
 import { createPinia} from 'pinia'
 import { usePluginStore } from "./store/plugin";
 import { usePromptStore } from "./store/prompts";
 
-export class DeepSeekAIAssistant_ItemView extends ItemView{
-    plugin: Plugin_Deepseek_AI_Assistant;
+export class AIWritingVault_ItemView extends ItemView{
+    plugin: Plugin_AI_Writing_Vault;
     private promptStore: any;
     private pluginStore: any;
 
-    constructor(leaf: WorkspaceLeaf, plugin: Plugin_Deepseek_AI_Assistant) {
+    constructor(leaf: WorkspaceLeaf, plugin: Plugin_AI_Writing_Vault) {
         super(leaf);
         this.plugin = plugin;
     }
     getViewType(): string {
-        return "deepseek-ai-assistant-itemview"
+        return "ai-writing-vault-itemview"
     }
     getDisplayText(): string {
-        return "Deepseek AI assistant"
+        return "AI Writing Vault"
     }
     getIcon():string {
         return "bot"
@@ -27,7 +27,7 @@ export class DeepSeekAIAssistant_ItemView extends ItemView{
     async onOpen(){
         const { containerEl } = this;
         containerEl.empty();
-        containerEl.addClass("deepseek-ai-assistant-view");
+        containerEl.addClass("ai-writing-vault-view");
         
         // 确保容器占满高度
         // containerEl.addClass("deepseek-ai-view-container");

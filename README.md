@@ -1,106 +1,81 @@
-# DeepSeek AI Assistant for Obsidian
+# AI Writing Vault for Obsidian
 
-[中文](#中文) | [English](#english)
+A focused AI workspace inside Obsidian to ask, track, and reuse conversations as searchable knowledge assets.
+
+> This project is a **second‑phase upgrade** based on the original repo: [mali-i/deepseek-ai-assistant](https://github.com/mali-i/deepseek-ai-assistant/blob/main/README.md)
 
 ---
 
 ## 中文
 
-### 概述
-DeepSeek AI Assistant 是一款辅助 Obsidian 用户进行 Prompt 管理与知识积累的工具。它旨在帮助用户记录提问过程，将零散的 AI 对话转化为可追溯的知识资产。
+AI Writing Vault 是一个在 Obsidian 内使用的 AI 工作台，帮助你记录提问、管理对话线程，并将日常问题沉淀为可搜索的知识资产。
 
-<div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
-</div>
+### 本项目新增/升级内容
+- 更统一的高端极简 UI 设计与交互优化。
+- OpenAI 兼容接口完善（DeepSeek / OpenAI / 第三方），模型自动发现 + 手动输入。
+- 上下文感知：一键引用当前笔记作为上下文，支持取消。
+- 对话线程化 + New 分支。
+- 历史时间线 + 全量搜索 + 删除功能。
+- 边生成边渲染（更快首字反馈），并保持最终完整 Markdown 渲染。
+- 表格渲染容错增强与圆角表格样式。
+- Graphviz 自动识别渲染 + Mermaid 渲染。
+- 数学渲染引擎切换（KaTeX / MathJax）。
+- 代码高亮主题切换（Light / Dark）。
+- 思考模式显示（可选）。
+- 快捷键：Cmd/Ctrl + Enter 发送。
 
-### 主要功能
+### 截图位置（请替换为实际效果图）
+- 主界面：`![Main](./images/shot-main.png)`
+- 对话线程：`![Thread](./images/shot-thread.png)`
+- 上下文引用：`![Context](./images/shot-context.png)`
+- 渲染展示（表格/公式/图表）：`![Render](./images/shot-render.png)`
 
-<div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="500px" alt="DeepSeek AI Assistant Demo"/>
-</div>
+### 设置项
+- API Key
+- API URL（自动补全 /v1）
+- System Prompt
+- 数学渲染引擎：KaTeX / MathJax
+- 代码高亮主题：Light / Dark
 
-#### Prompts 管理与检索：构建您的知识资产
-插件不仅仅是记录，更是对思维的沉淀。通过**关键词筛选**功能，您可以瞬间过往记录中找回曾经的灵感或复杂的解决方案。这种“即时复用”的能力，让每一条 Prompt 都不再是消耗品，而是转化为您个人知识库中可随时调用的**知识资产**。
-
-#### Timeline 历史时间轴
-侧边栏内置了直观的 Timeline 视图，按日期对您的提问进行分类展示。您可以轻松回溯到特定的一天，查看当时的思考脉络。这种基于时间的组织方式，帮助您发现自己学习兴趣的迁移和思维深度的演进。
-
-#### 对话追溯与链接
-支持为每一条 Prompt 生成专用链接。您可以将链接以 `[问题描述](obsidian://deepseek-ai-assistant?id=...)` 的格式保存至笔记中。在整理笔记时，点击链接即可回溯当时的 AI 回答。
-
-#### 提问统计
-内置热力图功能，展示近期的提问频率。这可以作为一种轻量级的学习轨迹参考，帮助您了解自己的关注点变化。
-
-#### 基础对话支持
-集成 DeepSeek V3 与 R1 模型，支持流式输出，提供基础的 Markdown 渲染，方便将内容复制到笔记中。
-
-### 配置和使用说明
-1. 在插件设置中填入您的 [DeepSeek API Key](https://platform.deepseek.com)。
-2. 确保您的账户中有足够的 Token 余额。
-3. 通过侧边栏图标或命令面板 "Open deepseek-ai-assistant" 打开界面。
-4. API KEY 以及所有数据保存在您的本地 `data.json` 文件中。
-
-### 支持与赞助
-如果您觉得这个插件对您的学习有所帮助，欢迎请作者喝杯咖啡！
-
-<div align="center">
-    <img 
-        src="https://github.com/mali-i/deepseek-ai-assistant/blob/main/images/%E5%BE%AE%E4%BF%A1%E8%B5%9E%E8%B5%8F%E7%A0%81.JPG" 
-        width="200px"
-    />
-</div>
+### 数据与隐私
+- 所有记录保存在本地 `data.json`
+- 不上传历史记录
 
 ---
 
 ## English
 
-### Overview
-DeepSeek AI Assistant is a tool designed to help Obsidian users manage prompts and accumulate knowledge. It aims to assist users in recording their inquiry process, transforming scattered AI conversations into traceable knowledge assets.
+AI Writing Vault is a focused AI workspace inside Obsidian that helps you ask, track, and reuse conversations as searchable knowledge assets.
 
-<div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/plugin_version2_0_0.png?raw=true" width="400px" alt="DeepSeek AI Assistant Interface"/>
-</div>
+### What’s upgraded in this fork
+- Premium, minimal UI redesign with cleaner interactions.
+- Improved OpenAI‑compatible support (DeepSeek / OpenAI / third‑party), model auto discovery + manual input.
+- Context Awareness: attach current note, with quick removal.
+- Threaded conversations + New branching.
+- Timeline + full‑history search + delete.
+- Live streaming render with final Markdown polish.
+- Table rendering fixes + rounded table style.
+- Graphviz auto‑render + Mermaid.
+- Switchable math engines (KaTeX / MathJax).
+- Switchable code highlight themes (Light / Dark).
+- Optional reasoning display.
+- Shortcut: Cmd/Ctrl + Enter to send.
 
-### Features
+### Screenshot placeholders
+- Main view: `![Main](./images/shot-main.png)`
+- Threaded chat: `![Thread](./images/shot-thread.png)`
+- Context usage: `![Context](./images/shot-context.png)`
+- Rendering (tables/math/diagrams): `![Render](./images/shot-render.png)`
 
-<div align="center">
-    <img src="https://github.com/mali-i/deepseek-ai-assistant/blob/dev/images/Deepseek-ai-assistant%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA.gif?raw=true" width="500px" alt="DeepSeek AI Assistant Demo"/>
-</div>
+### Settings
+- API Key
+- API URL (auto appends /v1)
+- System Prompt
+- Math engine: KaTeX / MathJax
+- Code theme: Light / Dark
 
-#### Prompts Management & Search: Building Your Knowledge Assets
-The plugin is more than just a logger; it's a repository for your thoughts. With powerful **keyword filtering**, you can instantly retrieve past inspirations or complex solutions from historical records. This "instant reuse" capability transforms every prompt from a one-time interaction into a **digital asset** that can be invoked at any time within your personal knowledge base.
+### Data
+- All data is stored locally in `data.json`
+- No history is uploaded
 
-#### Timeline View
-The sidebar features an intuitive Timeline view that categorizes and displays your prompts by date. You can easily travel back to a specific day to review your train of thought. This time-based organization helps you discover shifts in your learning interests and the evolution of your thinking depth.
-
-#### Traceability & Links
-Supports generating dedicated links for each prompt. You can save links in your notes using the `[Question Description](obsidian://deepseek-ai-assistant?id=...)` format. While organizing notes, click the link to trace back to the AI's response at that time.
-
-#### Inquiry Statistics
-Includes a heatmap feature to display recent inquiry frequency. This serves as a lightweight reference for your learning trajectory, helping you understand changes in your focus.
-
-#### Basic Chat Support
-Integrates DeepSeek V3 and R1 models, supporting streaming output and providing basic Markdown rendering for easy copying of content into notes.
-
-### Configuration
-1. Enter your [DeepSeek API Key](https://platform.deepseek.com) in the plugin settings.
-2. Ensure your account has sufficient token balance.
-3. Open the interface via the ribbon icon or the command palette ("Open deepseek-ai-assistant").
-4. Your API KEY and all data are stored locally in your `data.json` file.
-
-### Support & Sponsoring
-If you find this plugin helpful, feel free to buy the author a coffee!
-
-<div align="center">
-    <img 
-        src="https://github.com/mali-i/deepseek-ai-assistant/blob/main/images/%E5%BE%AE%E4%BF%A1%E8%B5%9E%E8%B5%8F%E7%A0%81.JPG" 
-        width="200px"
-    />
-</div>
-
----
-由 [algernon](https://github.com/mali-i) 开发 | Developed by [algernon](https://github.com/mali-i).
-
-
-
-
+Author: Lirio

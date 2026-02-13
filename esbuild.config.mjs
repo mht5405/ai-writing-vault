@@ -70,6 +70,11 @@ const esbuildContext = await esbuild.context({
     sourcemap: release ? false : "inline",
     treeShaking: true,
     plugins: [esbuildPluginVue3()],
+    loader: {
+        ".woff": "dataurl",
+        ".woff2": "dataurl",
+        ".ttf": "dataurl"
+    },
     // feature flag vue编译时特性标识配置问题
     define:{
         '__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': 'false'

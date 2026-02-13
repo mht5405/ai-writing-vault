@@ -3,7 +3,7 @@
         <!-- 侧边栏 -->
         <div 
             v-show="isSidebarOpen"
-            class="relative flex flex-col flex-none h-full bg-[var(--background-secondary)] border-r border-[var(--apple-border)]"
+            class="relative flex flex-col flex-none h-full bg-[var(--background-primary)] border-r border-[var(--apple-border)]"
             :style="{ width: asideWidth + 'px', flexDirection: 'column' }"
         >
             <!-- Header/Dashboard 区域：固定高度，带底部分割线 -->
@@ -32,11 +32,11 @@
         </div>
 
         <!-- 主内容区 -->
-        <div class="flex-1 h-full overflow-hidden relative bg-[var(--background-secondary)]">
+        <div class="flex-1 h-full overflow-hidden relative bg-[var(--background-primary)]">
             <!-- Sidebar Toggle Button -->
             <button 
                 @click="toggleSidebar"
-                class="absolute top-3 left-3 z-20 p-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--background-modifier-hover)] hover:text-[var(--text-normal)] transition-colors"
+                class="absolute top-4 left-4 z-20 p-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--apple-bg-secondary)] hover:text-[var(--text-normal)] transition-colors"
                 :title="isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'"
             >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -116,4 +116,3 @@ onUnmounted(() => {
 });
 
 </script>
-

@@ -1,0 +1,95 @@
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs {
+  background: #f6f8fa;
+  color: #24292e;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-comment,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-keyword,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-selector-tag,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-subst {
+  color: #d73a49;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-literal,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-number,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-tag .hljs-attr,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-template-variable,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-variable {
+  color: #005cc5;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-string,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-doctag {
+  color: #032f62;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-title,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-section,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-name,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-selector-id,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-selector-class {
+  color: #6f42c1;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-attribute,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-built_in,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-builtin-name,
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-meta {
+  color: #005cc5;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-emphasis {
+  font-style: italic;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs-strong {
+  font-weight: 600;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs {
+  background: #0d1117;
+  color: #c9d1d9;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-comment,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-keyword,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-selector-tag,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-subst {
+  color: #ff7b72;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-literal,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-number,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-tag .hljs-attr,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-template-variable,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-variable {
+  color: #79c0ff;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-string,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-doctag {
+  color: #a5d6ff;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-title,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-section,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-name,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-selector-id,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-selector-class {
+  color: #d2a8ff;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-attribute,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-built_in,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-builtin-name,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-meta {
+  color: #79c0ff;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-emphasis {
+  font-style: italic;
+}
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs-strong {
+  font-weight: 600;
+}
+.ai-writing-vault-view.ai-writing-vault-code-light .hljs,
+.ai-writing-vault-view.ai-writing-vault-code-dark .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.75em 1em;
+  border-radius: 8px;
+}

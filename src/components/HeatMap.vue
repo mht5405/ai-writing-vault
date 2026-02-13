@@ -1,6 +1,6 @@
 <script setup>
 import * as d3 from 'd3'
-import { ref, onMounted,nextTick, watchEffect, watch, reactive } from 'vue';
+import { ref, onMounted, nextTick, watch } from 'vue';
 import { usePromptStore } from '../store/prompts'
 
 const promptStore = usePromptStore()
@@ -8,7 +8,7 @@ const pixel_width = ref(12)
 const svg_left_or_right_margin = ref(10)
 const svg_top_bottom_margin = ref(10)
 const pixel_margin = ref(5) // rect与右边的rect之间的间隔
-var rect_count_x = ref(0)
+const rect_count_x = ref(0)
 const scrollContainer = ref(null)
 const isDragging = ref(false)
 let startX
@@ -70,6 +70,14 @@ onMounted(async ()=>{
     }
     draw_svg();
 })
+
+const getFillColor = (count) => {
+    if (count === 0) return 'var(--apple-bg-secondary)';
+    if (count > 14) return 'rgb(var(--ai-accent-rgb))';
+    if (count > 9) return 'rgba(var(--ai-accent-rgb), 0.85)';
+    if (count > 4) return 'rgba(var(--ai-accent-rgb), 0.6)';
+    return 'rgba(var(--ai-accent-rgb), 0.4)';
+};
 
 const draw_svg = async ()=>{
     await nextTick() // 等待DOM更新完成
@@ -163,22 +171,7 @@ const draw_svg = async ()=>{
         const row = i % 7 // 计算当前rect是第几行
         return svg_top_bottom_margin.value + month_label_height + (pixel_width.value + pixel_margin.value) * (row)    
       })
-      .attr('fill', v => {
-        if (v.prompts_num == 0) {
-            return 'var(--apple-bg-secondary)'  // 使用 CSS 变量适配深色模式
-        }
-
-        if (v.prompts_num > 14) {
-            return 'var(--apple-blue)'  // 深蓝色
-        }
-        if(v.prompts_num >9){
-            return 'rgba(0, 122, 255, 0.8)'
-        }
-        if(v.prompts_num >4){
-            return 'rgba(0, 122, 255, 0.6)'
-        }
-        return 'rgba(0, 122, 255, 0.4)'  // 浅蓝色
-        })
+      .attr('fill', v => getFillColor(v.prompts_num))
      .on('click', (e,v)=>handleClick(e,v))
      .style('cursor', 'pointer') // 添加鼠标手势
      .append('title') // 添加悬浮提示
@@ -212,16 +205,18 @@ watch(() => promptStore.promptStats, async () => {
 </script>
 
 <template>
-    <div id="container" class="w-full overflow-hidden">
-        <div 
-            ref="scrollContainer"
-            class="bg-[var(--background-secondary)] overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing select-none"
-            @mousedown="startDragging"
-            @mousemove="doDragging"
-            @mouseup="stopDragging"
-            @mouseleave="stopDragging"
-        >
-            <svg id="svg_container" class="h-auto block"></svg>
+    <div id="container" class="w-full px-4 pb-3">
+        <div class="ai-panel p-2">
+            <div 
+                ref="scrollContainer"
+                class="bg-transparent overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing select-none"
+                @mousedown="startDragging"
+                @mousemove="doDragging"
+                @mouseup="stopDragging"
+                @mouseleave="stopDragging"
+            >
+                <svg id="svg_container" class="h-auto block"></svg>
+            </div>
         </div>
     </div> 
 </template>

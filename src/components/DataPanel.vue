@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed} from 'vue';
+import { computed } from 'vue';
 import { usePromptStore } from '../store/prompts';
-import { Notice, WorkspaceLeaf } from 'obsidian';
+import { Notice } from 'obsidian';
 
 const promptStore = usePromptStore();
 
@@ -40,15 +40,16 @@ const onTotalPromptsClick = async () => {
 </script>
 
 <template>
-   <div class="w-full px-4 py-4">
-      <div class="flex justify-between items-center bg-[var(--background-secondary)] rounded-lg p-3 border border-[var(--apple-border)] shadow-sm">
-         <div class="flex flex-col items-center flex-1 border-r border-[var(--apple-border)] cursor-pointer hover:bg-[var(--apple-bg-secondary)] transition-colors rounded-l-md" @click="onTotalPromptsClick">
+   <div class="w-full px-4 pt-4 pb-3">
+      <div class="ai-panel p-3 flex items-center justify-between gap-3">
+         <div class="flex flex-col flex-1 cursor-pointer rounded-xl px-2 py-1 hover:bg-[var(--apple-bg-secondary)] transition-colors" @click="onTotalPromptsClick">
             <span class="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-1">Prompts</span>
-            <b class="text-xl font-semibold text-[var(--text-normal)]">{{ totalPrompts }}</b>
+            <b class="text-2xl font-semibold text-[var(--text-normal)]">{{ totalPrompts }}</b>
          </div>
-         <div class="flex flex-col items-center flex-1 cursor-default">
+         <div class="h-8 w-px bg-[var(--background-modifier-border)]"></div>
+         <div class="flex flex-col flex-1 rounded-xl px-2 py-1">
             <span class="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-1">Days</span>
-            <b class="text-xl font-semibold text-[var(--text-normal)]">{{ aiDays }}</b>
+            <b class="text-2xl font-semibold text-[var(--text-normal)]">{{ aiDays }}</b>
          </div>
       </div>
    </div>

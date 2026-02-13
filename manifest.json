@@ -1,10 +1,9 @@
 {
-    "id": "deepseek-ai-assistant",
-    "name": "deepseek-ai-assistant",
+    "id": "ai-writing-vault",
+    "name": "AI Writing Vault",
     "version": "2.0.0",
     "minAppVersion": "1.1.0",
-    "description": "Help you to study with ai-prompting.",
-    "author": "algernon",
-    "authorUrl": "https://github.com/mali-i",
+    "description": "Ask, write, and turn daily AI chats into searchable knowledge assets.",
+    "author": "Lirio",
     "isDesktopOnly": true
 }

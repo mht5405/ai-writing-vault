@@ -1,51 +1,46 @@
 <script setup> 
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { usePromptStore } from '../store/prompts'
 import wordcloud from 'wordcloud'
 import { Segment, useDefault } from 'segmentit'
 
 const promptStore = usePromptStore()
-const promptStats = ref(promptStore.promptStats)
 
-// 遍历promptStats，提取所有的prompt，放在一个数组中
-let all_prompts = []
-for(let date in promptStats.value){
-    const prompt_content = promptStats.value[date].prompt_content;
-    // prompt_content是一个列表，里面的各个项是一个对象，提取这个对象里的prompt字段
-    const prompts = prompt_content.map(item => item.prompt)
-    all_prompts = all_prompts.concat(prompts)
-}
-// console.log(all_prompts)
+const buildWordList = () => {
+    const stats = promptStore.promptStats;
+    if (!stats) return [];
 
-// 使用segmentit对all_promots进行分词，统计词频
-let word_freq = {}
-const segmentit = useDefault(new Segment())
-all_prompts.forEach(prompt => {
-    console.log(prompt)
-    // 每一个prompt进行分词
-    const words = segmentit.doSegment(prompt, { simple: true })
-    // console.log(words)
-    // words.forEach(word => {
-    //     if(word_freq[word]){
-    //         word_freq[word] += 1
-    //     } else {
-    //         word_freq[word] = 1
-    //     }
-    // })
-    // 所以不应该用分词，应该进行关键词提取，再根据关键词的词频，绘制词云
-    
-})
-console.log(word_freq)
+    const allPrompts: string[] = [];
+    for (const date in stats) {
+        const prompt_content = stats[date]?.prompt_content || [];
+        const prompts = prompt_content.flatMap((item: any) => {
+            if (Array.isArray(item.messages) && item.messages.length > 0) {
+                return item.messages.map((msg: any) => msg.prompt);
+            }
+            return item.prompt ? [item.prompt] : [];
+        });
+        allPrompts.push(...prompts);
+    }
 
-// 将 word_freq 转换为数组格式，方便wordcloud使用
-const word_freq_list = Object.entries(word_freq)
-console.log(word_freq_list)
+    const segmentit = useDefault(new Segment());
+    const wordFreq: Record<string, number> = {};
+    allPrompts.forEach((prompt) => {
+        const words = segmentit.doSegment(prompt, { simple: true });
+        words.forEach((word: string) => {
+            if (!word) return;
+            wordFreq[word] = (wordFreq[word] || 0) + 1;
+        });
+    });
 
-onMounted(()=>{
-    wordcloud(document.getElementById('cloud_canvas'), { 
-        list: word_freq_list,
-        
-    } );
+    return Object.entries(wordFreq);
+};
+
+onMounted(() => {
+    const list = buildWordList();
+    if (!list.length) return;
+    const canvas = document.getElementById('cloud_canvas');
+    if (!canvas) return;
+    wordcloud(canvas, { list });
 })
 </script>
 
@@ -57,8 +52,10 @@ onMounted(()=>{
 
 <style scoped>
 .word-cloud-component{
-    border:1px solid #ccc;
-    width:100%;
-    height:100px;
+    border: 1px solid var(--apple-border);
+    border-radius: 12px;
+    width: 100%;
+    height: 120px;
+    background: var(--background-primary);
 }
 </style>

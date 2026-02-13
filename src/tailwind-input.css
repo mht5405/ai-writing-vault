@@ -6,37 +6,70 @@
   /* 全局 Apple 风格变量与通用类 */
   :root {
     --apple-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --apple-radius: 12px;
-    --apple-radius-sm: 8px;
-    --apple-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --apple-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
-    --apple-border: rgba(0, 0, 0, 0.08);
-    --apple-blue: #007AFF;
-    --apple-blue-hover: #0062CC;
-    --apple-bg-secondary: rgba(0, 0, 0, 0.03);
+    --apple-radius: 14px;
+    --apple-radius-sm: 10px;
+    --apple-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    --apple-shadow-sm: 0 6px 16px rgba(15, 23, 42, 0.06);
+    --apple-border: rgba(15, 23, 42, 0.08);
+    --apple-blue: #4F46E5;
+    --apple-blue-hover: #4338CA;
+    --apple-bg-secondary: rgba(15, 23, 42, 0.04);
+    --ai-accent-rgb: 79, 70, 229;
   }
 
   .theme-dark {
-    --apple-border: rgba(255, 255, 255, 0.1);
-    --apple-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --apple-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
-    --apple-bg-secondary: rgba(255, 255, 255, 0.05);
+    --apple-border: rgba(148, 163, 184, 0.18);
+    --apple-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    --apple-shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.25);
+    --apple-bg-secondary: rgba(148, 163, 184, 0.08);
   }
 
   /* 滚动条优化 - 仅在插件视图内生效 */
-  .deepseek-ai-assistant-view ::-webkit-scrollbar {
+.ai-writing-vault-view ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
   }
-  .deepseek-ai-assistant-view ::-webkit-scrollbar-track {
+.ai-writing-vault-view ::-webkit-scrollbar-track {
       background: transparent;
   }
-  .deepseek-ai-assistant-view ::-webkit-scrollbar-thumb {
+.ai-writing-vault-view ::-webkit-scrollbar-thumb {
       background: rgba(128, 128, 128, 0.2);
       border-radius: 4px;
   }
-  .deepseek-ai-assistant-view ::-webkit-scrollbar-thumb:hover {
+.ai-writing-vault-view ::-webkit-scrollbar-thumb:hover {
       background: rgba(128, 128, 128, 0.4);
   }
 }
 
+@layer components {
+  .ai-panel {
+    @apply rounded-2xl border border-[var(--apple-border)] bg-[var(--background-secondary)] shadow-[0_12px_40px_rgba(15,23,42,0.06)];
+  }
+  .ai-panel-muted {
+    @apply rounded-2xl border border-[var(--apple-border)] bg-[var(--background-primary)] shadow-[0_8px_26px_rgba(15,23,42,0.05)];
+  }
+  .ai-pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 text-[12px] font-medium rounded-full border border-[var(--apple-border)] bg-[var(--background-secondary)] text-[var(--text-normal)] transition-colors;
+  }
+  .ai-pill-accent {
+    @apply bg-apple-blue/10 text-apple-blue border-apple-blue/20;
+  }
+  .ai-btn {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-1.5 text-[12px] font-medium rounded-lg border border-transparent text-[var(--text-normal)] transition-colors;
+  }
+  .ai-btn-ghost {
+    @apply hover:bg-[var(--apple-bg-secondary)] hover:text-[var(--text-normal)];
+  }
+  .ai-btn-primary {
+    @apply bg-apple-blue text-white shadow-[0_8px_20px_rgba(79,70,229,0.25)] hover:bg-[var(--apple-blue-hover)];
+  }
+  .ai-input {
+    @apply w-full bg-transparent text-[12px] font-medium text-[var(--text-normal)] focus:outline-none;
+  }
+  .ai-card {
+    @apply rounded-2xl border border-[var(--apple-border)] bg-[var(--background-primary)] shadow-[0_16px_40px_rgba(15,23,42,0.08)];
+  }
+  .ai-divider {
+    @apply h-px w-full bg-[var(--background-modifier-border)];
+  }
+}
