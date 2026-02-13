@@ -252,7 +252,9 @@ const formatTime = (timestamp: string) => {
 
 const clickItem = (item: any)=>{
   promptStore.updateHistoryCard(item)
-  promptStore.clearFocus?.();
+  if (item?.id_timestamp) {
+    promptStore.focusMessage?.(item.id_timestamp);
+  }
 }
 
 const clickMessage = (item: any, msg: any) => {

@@ -75,6 +75,13 @@ export const usePromptStore = defineStore('prompts',()=>{
     }
 
     function focusMessage(messageId: string){
+        if (focusedMessageId.value === messageId) {
+            focusedMessageId.value = null;
+            window.setTimeout(() => {
+                focusedMessageId.value = messageId;
+            }, 0);
+            return;
+        }
         focusedMessageId.value = messageId
     }
 
